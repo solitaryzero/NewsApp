@@ -18,7 +18,11 @@ public class MainActivity extends AppCompatActivity {
     public void btOnClick(View v) {
         Intent intent = new Intent(MainActivity.this, ShowDetails.class);
         intent.putExtra("Headline", "This is a headline");
-        intent.putExtra("Details", "This is a bunch of details");
+        String longString = "";
+        for (int i=0;i<100;i++){
+            longString += "This is a bunch of details.\n";
+        }
+        intent.putExtra("Details", longString);
         startActivity(intent);
     }
 }
