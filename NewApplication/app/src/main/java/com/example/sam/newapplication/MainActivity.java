@@ -1,5 +1,6 @@
 package com.example.sam.newapplication;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -66,6 +67,11 @@ public class MainActivity extends AppCompatActivity {
                 oneNewsMessageHandler.sendMessage(message);
             }
         }).start();
+    }
+
+    public void favOnClick(View v) {
+        Intent intent = new Intent(MainActivity.this,SeeFavorited.class);
+        startActivity(intent);
     }
 
     class MessageHandler extends Handler {
