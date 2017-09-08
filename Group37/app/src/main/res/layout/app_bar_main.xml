@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.java.group37.newsapp.MainActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        android:id="@+id/appBarLayout">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
+    <RelativeLayout
+    android:background="@color/colorPrimary"
+    android:id="@+id/top_bar"
+    android:layout_width="match_parent"
+    android:layout_height="0dp">
+    <TextView
+        android:textSize="20sp"
+        android:textColor="@android:color/white"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</RelativeLayout>
+
+    <!--<com.gxz.PagerSlidingTabStrip
+        android:id="@+id/tabs"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:textColor="@color/color_2b2b2b"
+        android:textSize="16sp"
+        android:layout_below="@+id/appBarLayout"
+        app:pstsDividerColor="@android:color/transparent"
+        app:pstsIndicatorColor="@color/color_0babd1"
+        app:pstsIndicatorHeight="5dp"
+        app:pstsShouldExpand="false"
+        app:pstsTextSelectedColor="@color/color_0babd1"
+        app:pstsUnderlineColor="@color/colorPrimary" />
+
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_below="@+id/tabs"
+            android:id="@+id/frameLayout2">
+
+            <com.example.dell.oo.widget.ViewFlow
+                android:id="@+id/viewflow"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </com.example.dell.oo.widget.ViewFlow>
+
+            <com.example.dell.oo.widget.CircleFlowIndicator
+                android:id="@+id/viewflowindicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center_horizontal"
+                android:layout_marginBottom="10dp"
+                android:padding="10dp"
+                app:activeColor="#5677fc"
+                app:activeType="fill"
+                app:fadeOut="1000"
+                app:inactiveColor="#44000000"
+                app:inactiveType="fill"
+                app:radius="4dp"/>
+        </FrameLayout>
+        <cn.bingoogolapple.refreshlayout.BGARefreshLayout
+            android:id="@+id/define_bga_refresh_with_load"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/frameLayout2"
+            android:layout_above="@+id/bottomBar">
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/define_bga_refresh_with_load_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="265dp"
+                android:padding="5dp"
+                android:scrollbars="none">
+
+            </android.support.v7.widget.RecyclerView>
+        </cn.bingoogolapple.refreshlayout.BGARefreshLayout>
+    <android.support.v4.view.ViewPager
+    android:id="@+id/pager"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentStart="true"
+    android:layout_above="@+id/bottomBar">
+    </android.support.v4.view.ViewPager>-->
+    <LinearLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_below="@+id/appBarLayout">
+        <LinearLayout
+            android:layout_below="@+id/top_bar"
+            android:orientation="horizontal"
+            android:id="@+id/tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="35dp">
+            <com.gxz.PagerSlidingTabStrip
+                android:id="@+id/indicator"
+                android:layout_width="328dp"
+                android:layout_height="40dp"
+                android:textColor="@color/color_2b2b2b"
+                android:textSize="16sp"
+                android:layout_below="@+id/appBarLayout"
+                app:pstsDividerColor="@android:color/transparent"
+                app:pstsIndicatorColor="@color/color_0babd1"
+                app:pstsIndicatorHeight="5dp"
+                app:pstsShouldExpand="false"
+                app:pstsTextSelectedColor="@color/color_0babd1"
+                app:pstsUnderlineColor="@color/colorPrimary" />
+            <ImageView
+                android:scaleType="centerCrop"
+                android:id="@+id/iv_subscibe"
+                android:paddingLeft="5dp"
+                android:layout_gravity="center_vertical"
+                android:paddingRight="5dp"
+                android:layout_weight="1"
+                android:src="@drawable/icon_subscibe_show"
+                android:layout_width="40dp"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+
+
+        <!-- <com.viewpagerindicator.TabPageIndicator
+             android:id="@+id/indicator"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:background="#ffffff"
+             android:theme="@style/StyledIndicators">
+         </com.viewpagerindicator.TabPageIndicator>-->
+
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" >
+        </android.support.v4.view.ViewPager>
+        <com.roughike.bottombar.BottomBar
+            android:id="@+id/bottomBar"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_alignParentBottom="true"
+            app:bb_tabXmlResource="@xml/bottombar_tabs" >
+
+        </com.roughike.bottombar.BottomBar>
+        <!--<android.support.design.widget.BottomNavigationView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            app:menu="@menu/buttom"/>-->
+    </LinearLayout>
+    <!--<com.roughike.bottombar.BottomBar
+        android:id="@+id/bottomBar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        app:bb_tabXmlResource="@xml/bottombar_tabs" >
+
+    </com.roughike.bottombar.BottomBar>-->
+
+</RelativeLayout>
