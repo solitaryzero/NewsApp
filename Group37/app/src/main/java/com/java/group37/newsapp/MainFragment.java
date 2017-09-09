@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,20 +25,27 @@ import java.util.List;
 public class MainFragment extends Fragment implements OnRefreshListener,OnItemClickListener
 {
     private int newsType = 0;
+    private int pageNo = 0;
     View view;
     RefreshListView list;
     ArrayList<HashMap<String, String>> mylist;
     SimpleAdapter adapter;
     private news_adapter newsAdapter;
     //******************************************
-    private List<NewsItem> mDatas = new ArrayList<NewsItem>();//数据
+    private List<News> NewsList = new ArrayList<News>();//数据
     private ViewFlow viewFlow;
     private CircleFlowIndicator indicator;
     private List<Integer> ids;
+    jsonAnalyserList analyser;
+
+    NewsUrlThread urlThread;
+
+    public MainFragment()   {}
     public MainFragment(int newsType)
     {
         this.newsType = newsType;
     }
+
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         viewFlow = (ViewFlow) view.findViewById(R.id.viewflow);
@@ -52,48 +60,40 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
 
         viewFlow.setAdapter(new ImageAdapter());
         viewFlow.startAutoFlowTimer();
-        mDatas.add(new NewsItem("1","title1",null,null,null,"content-add-up",1));
-        mDatas.add(new NewsItem("1","title2",null,null,null,"content-add-up",1));
-        mDatas.add(new NewsItem("1","title3",null,null,null,"content-add-up",1));
-        mDatas.add(new NewsItem("1","title4",null,null,null,"content-add-up",1));
-        mDatas.add(new NewsItem("1","title5",null,null,null,"content-add-up",1));
 
-        newsAdapter = new news_adapter(getActivity(),mDatas);
-        list = (RefreshListView) view.findViewById (R.id.Nlistview);
+        pageNo = 0;
+        urlThread=new NewsUrlThread();
+        urlThread.start();
+        try {
+            urlThread.join();
+            for (int i = 0; i < analyser.newsList.size(); i++)
+                NewsList.add(analyser.newsList.get(i));
 
-       /* mylist = new ArrayList<HashMap<String, String>>();
-        for(int i=0; i<10; i++){
-            HashMap<String,String> map = new HashMap<String, String>();
-            map.put("ItemTitle", "This is Title.....");
-            map.put("ItemText", TabAdapter.TITLES[newsType]);
-            mylist.add(map);
+            newsAdapter = new news_adapter(getActivity(),NewsList);
+            list = (RefreshListView) view.findViewById (R.id.Nlistview);
+
+            list.setAdapter(newsAdapter);
+
+            list.setOnRefreshListener(this);
+            list.setOnItemClickListener(this);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-        */
-        //adapter = new SimpleAdapter(getActivity(), mylist, R.layout.item, new String[]{"ItemTitle", "ItemText"}, new int[]{R.id.title, R.id.content});
-
-        list.setAdapter(newsAdapter);
-        //list.setAdapter(adapter);
-        list.setOnRefreshListener(this);
-        list.setOnItemClickListener(this);
 
     }
     private class ImageAdapter extends BaseAdapter {
-
         @Override
         public int getCount() {
             return ids.size();
         }
-
         @Override
         public Object getItem(int position) {
             return ids.get(position);
         }
-
         @Override
         public long getItemId(int position) {
             return position;
         }
-
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null){
@@ -113,19 +113,22 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
     public void onDownPullRefresh() {
         new AsyncTask<Void, Void, Void>() {
             protected Void doInBackground(Void... params) {
-                SystemClock.sleep(1000);
+                //SystemClock.sleep(1000);
 //**********************************************************************
                 //这里是下拉刷新的新闻
-                List<NewsItem> addDatas = new ArrayList<NewsItem>();
+                pageNo = 0;
+                urlThread=new NewsUrlThread();
+                urlThread.start();
+                try {
+                    urlThread.join();
+                    if (!analyser.newsList.get(0).equals(NewsList.get(0)))
+                        for (int i = 0; i < analyser.newsList.size(); i++)
+                            if (!analyser.newsList.get(i).equals(NewsList.get(0)))
+                                NewsList.add(i, analyser.newsList.get(i));
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
-                //update newst
-
-                //int id, String title, String link, String date, String imgLink, String content, int newsType
-               // addDatas.add(new NewsItem(1,"title",null,null,null,"content-add-up",1));
-               // addDatas.add(new NewsItem(2,"title",null,null,null,"content-add-up",1));
-                mDatas.add(0,new NewsItem("2","title",null,null,null,"content-add-uppppp",1));
-                mDatas.add(1,new NewsItem("2","title",null,null,null,"content-add-uppp",1));
-                mDatas.add(2,new NewsItem("2","title",null,null,null,"content-add-upp",1));
 //**********************************************************************
                 return null;
             }
@@ -139,13 +142,20 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
     public void onLoadingMore() {
         new AsyncTask<Void, Void, Void>() {
             protected Void doInBackground(Void... params) {
-                SystemClock.sleep(1000);
+                //SystemClock.sleep(1000);
 //**************************************************************
                 //这里是需要下滑到底部需要添加的数据：
                 // update later
-
-                mDatas.add(new NewsItem("1","title",null,null,null,"content-add-down",1));
-                mDatas.add(new NewsItem("2","title",null,null,null,"content-add-down",1));
+                pageNo = NewsList.size();
+                urlThread=new NewsUrlThread();
+                urlThread.start();
+                try {
+                    urlThread.join();
+                    for (int i = 0; i < analyser.newsList.size(); i++)
+                        NewsList.add(analyser.newsList.get(i));
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
 //**************************************************************
                 return null;
@@ -162,5 +172,18 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
         Toast.makeText(getActivity(), "Click item" + position, Toast.LENGTH_SHORT).show();
         // click a item
         //
+    }
+
+    class NewsUrlThread extends Thread {
+        @Override
+        public void run()
+        {
+            LatestNewsAccesser accesser = new LatestNewsAccesser(pageNo, newsType);
+            String jsonString = accesser.stringBuilder.toString();
+            Log.i("pageNo", Integer.toString(pageNo));
+            Log.i("newsType",Integer.toString(newsType));
+            Log.i("json",jsonString);
+            analyser = new jsonAnalyserList(jsonString);
+        }
     }
 }

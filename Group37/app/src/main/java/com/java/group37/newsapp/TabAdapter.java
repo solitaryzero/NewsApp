@@ -12,7 +12,7 @@ public class TabAdapter extends FragmentPagerAdapter
 {
     /*添加新闻分类栏目*/
     public static final String[] TITLES = new String[]
-            { "要闻", "体育", "娱乐", "游戏", "学习","test1","test2","test3","test4" };
+    { "全部","科技", "教育", "军事", "国内", "社会","文化","汽车","国际","体育","财经","健康","娱乐" };
     //public  String[] TITLES;
     public TabAdapter(FragmentManager fm) {
         super(fm);

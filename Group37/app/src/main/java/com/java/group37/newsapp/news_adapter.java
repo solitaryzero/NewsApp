@@ -12,17 +12,17 @@ import java.util.List;
 
 public class news_adapter extends BaseAdapter {
     private LayoutInflater mInflater;
-    private List<NewsItem> mDatas;
+    private List<News> mDatas;
 
 
-    public news_adapter(Context context, List<NewsItem> datas){
+    public news_adapter(Context context, List<News> datas){
         this.mDatas = datas;
         mInflater = LayoutInflater.from(context);
         //****************************************
     }
 
 
-    public void addAll(List<NewsItem> mDatas){
+    public void addAll(List<News> mDatas){
         this.mDatas.addAll(mDatas);
     }
 
@@ -52,15 +52,15 @@ public class news_adapter extends BaseAdapter {
             holder = (ViewHolder) view.getTag();
         }
 
-        NewsItem newsItem = mDatas.get(position);
-        holder.mTitle.setText(newsItem.getTitle());
-        holder.mContent.setText(newsItem.getContent());
-        holder.mDate.setText(newsItem.getDate());
+        News newsItem = mDatas.get(position);
+        holder.mTitle.setText(newsItem.news_Title);
+        holder.mContent.setText(newsItem.news_Content);
+        holder.mDate.setText(newsItem.news_Time);
 
         //******************************************************
         //处理文章是否有无图片链接
         //******************************************************
-        if(newsItem.getImgLink() != null){
+        if(!newsItem.news_Pictures.equals("")){
             holder.mImg.setVisibility(View.VISIBLE);
             //**********************
         }

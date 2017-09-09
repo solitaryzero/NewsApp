@@ -77,13 +77,13 @@ public class MainActivity extends BaseActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mIndicator = (PagerSlidingTabStrip) findViewById(R.id.indicator);
-        mViewPager = (ViewPager) findViewById(R.id.pager);
-        mAdapter = new TabAdapter(getSupportFragmentManager());
-        mViewPager.setAdapter(mAdapter);
+        mIndicator = (PagerSlidingTabStrip) findViewById(R.id.indicator);//导航栏
+        mViewPager = (ViewPager) findViewById(R.id.pager);//导航栏下的page
+        mAdapter = new TabAdapter(getSupportFragmentManager());//导航栏
+        mViewPager.setAdapter(mAdapter);//导航栏适配器
 
         mIndicator.setViewPager(mViewPager);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);//最顶栏
         toolbar.setTitle("SkyNews");
         setSupportActionBar(toolbar);
         switch_view = findViewById(R.id.iv_subscibe);
@@ -92,42 +92,7 @@ public class MainActivity extends BaseActivity
         myChannels = new ArrayList<>();
         adapter = new TitleFragmentAdapter(getSupportFragmentManager(), myChannels);
         loadData();
-        /*mContext = this;
-        initView();
-        setBgaRefreshLayout();
-        setRecyclerView();
-        pager = (ViewPager) findViewById(R.id.pager);
-        mPagerSlidingTabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
-        ArrayList<String> list = new ArrayList<>();
-        list.add("推荐");
-        list.add("热点");
-        list.add("社会");
-        list.add("娱乐");
-        list.add("科技");
-        list.add("体育");
-       pager.setAdapter(new MyPagerAdapter(getSupportFragmentManager(), list));
-       mPagerSlidingTabStrip.setViewPager(pager);
-       pager.setCurrentItem(1);
-        viewFlow = (ViewFlow) findViewById(R.id.viewflow);
-        indicator = (CircleFlowIndicator) findViewById(R.id.viewflowindicator);
-        viewFlow.setFlowIndicator(indicator);
-
-        ids = new ArrayList<Integer>();
-        ids.add(R.drawable.banner1);
-        ids.add(R.drawable.banner2);
-        ids.add(R.drawable.banner3);
-        ids.add(R.drawable.banner4);
-
-        viewFlow.setAdapter(new ImageAdapter());
-        viewFlow.startAutoFlowTimer();
-      /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
+        
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(

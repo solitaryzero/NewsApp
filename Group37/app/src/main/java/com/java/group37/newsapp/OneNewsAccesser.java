@@ -1,4 +1,4 @@
-package com.example.sam.newapplication;
+package com.java.group37.newsapp;
 
 import java.io.*;
 import java.net.HttpURLConnection;
