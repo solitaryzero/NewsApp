@@ -8,12 +8,13 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 public class news_adapter extends BaseAdapter {
     private LayoutInflater mInflater;
     private List<News> mDatas;
-
 
     public news_adapter(Context context, List<News> datas){
         this.mDatas = datas;
@@ -62,6 +63,8 @@ public class news_adapter extends BaseAdapter {
         //******************************************************
         if(!newsItem.news_Pictures.equals("")){
             holder.mImg.setVisibility(View.VISIBLE);
+            String tmpPictures = newsItem.news_Pictures.split(";")[0];
+            Glide.with(MainActivity.mactivity).load(tmpPictures).placeholder(R.drawable.common_progressbar).dontAnimate().into(holder.mImg);
             //**********************
         }
         else{
