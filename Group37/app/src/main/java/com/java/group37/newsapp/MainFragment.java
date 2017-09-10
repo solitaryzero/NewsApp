@@ -37,14 +37,16 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
 
     //******************************************
     private List<News> NewsList = new ArrayList<News>();//数据
-    private ViewFlow viewFlow;
-    private CircleFlowIndicator indicator;
-    private List<Integer> ids;
+   // private ViewFlow viewFlow;
+    //private CircleFlowIndicator indicator;
+    //private List<Integer> ids;
     jsonAnalyserList analyser;
     jsonAnalyserOne oneAnalyser;
     String newsId;
     NewsUrlThread urlThread;
     OneUrlThread oneThread;
+
+    private ACache mCache;
 
     public MainFragment()   {}
     public MainFragment(int newsType)
@@ -53,8 +55,9 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
     }
 
     public void onActivityCreated(Bundle savedInstanceState) {
+        mCache = ACache.get(MainActivity.mactivity);
         super.onActivityCreated(savedInstanceState);
-        viewFlow = (ViewFlow) view.findViewById(R.id.viewflow);
+        /*viewFlow = (ViewFlow) view.findViewById(R.id.viewflow);
         indicator = (CircleFlowIndicator) view.findViewById(R.id.viewflowindicator);
         viewFlow.setFlowIndicator(indicator);
 
@@ -64,7 +67,7 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
         ids.add(R.drawable.banner3);
         ids.add(R.drawable.banner4);
 
-        viewFlow.setAdapter(new ImageAdapter());
+        viewFlow.setAdapter(new ImageAdapter());*/
         //viewFlow.startAutoFlowTimer();
 
         pageNo = 0;
@@ -87,7 +90,7 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
         }
 
     }
-    private class ImageAdapter extends BaseAdapter {
+   /* private class ImageAdapter extends BaseAdapter {
         @Override
         public int getCount() {
             return ids.size();
@@ -109,7 +112,7 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
             imageView.setImageDrawable(getResources().getDrawable(ids.get(position)));
             return convertView;
         }
-    }
+    }*/
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
        view = inflater.inflate(R.layout.new_listview, null);
@@ -189,10 +192,39 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
         TextView textView = (TextView) view.findViewById(R.id.title);
         textView.setTextColor(Color.BLUE);
         newsId = NewsList.get(position-1).news_ID;
-        oneThread=new OneUrlThread();
-        oneThread.start();
-        try {
-            oneThread.join();
+
+        String tmpString = mCache.getAsString(newsId);
+        if (tmpString == null) {
+            oneThread = new OneUrlThread();
+            oneThread.start();
+            try {
+                oneThread.join();
+                News singleNews = oneAnalyser.news;
+                mCache.put(newsId, oneAnalyser.news.original_String);
+
+                String nowFileString = mCache.getAsString("FileToSaveNews");
+                if (nowFileString == null)
+                    nowFileString = newsId;
+                else
+                {
+                    mCache.remove("FileToSaveNews");
+                    nowFileString += " " + newsId;
+                }
+                mCache.put("FileToSaveNews",nowFileString);
+
+                Intent intent = new Intent(MainActivity.mactivity, ShowDetails.class);
+                intent.putExtra("Headline", singleNews.news_Title);
+                String longString = singleNews.news_Content.replaceAll("　", "\n");
+                intent.putExtra("Details", longString);
+                String[] tmpList = singleNews.news_Pictures.split(";");
+                intent.putExtra("PictureList", tmpList);
+                startActivity(intent);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        else{
+            oneAnalyser = new jsonAnalyserOne(tmpString);
             News singleNews = oneAnalyser.news;
             Intent intent = new Intent(MainActivity.mactivity, ShowDetails.class);
             intent.putExtra("Headline", singleNews.news_Title);
@@ -201,8 +233,6 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
             String[] tmpList = singleNews.news_Pictures.split(";");
             intent.putExtra("PictureList", tmpList);
             startActivity(intent);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
     }
 

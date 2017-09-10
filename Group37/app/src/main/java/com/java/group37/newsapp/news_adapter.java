@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.List;
 
@@ -64,7 +65,7 @@ public class news_adapter extends BaseAdapter {
         if(!newsItem.news_Pictures.equals("")){
             holder.mImg.setVisibility(View.VISIBLE);
             String tmpPictures = newsItem.news_Pictures.split(";")[0];
-            Glide.with(MainActivity.mactivity).load(tmpPictures).placeholder(R.drawable.common_progressbar).dontAnimate().into(holder.mImg);
+            Glide.with(MainActivity.mactivity).load(tmpPictures).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.drawable.common_progressbar).dontAnimate().into(holder.mImg);
             //**********************
         }
         else{
