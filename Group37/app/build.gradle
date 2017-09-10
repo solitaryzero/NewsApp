@@ -39,6 +39,6 @@ dependencies {
     compile 'com.inkapplications.viewpageindicator:library:2.4.3'
     compile project(':channellib')
     compile 'com.google.code.gson:gson:2.2.4'
-    compile 'com.github.bumptech.glide:glide:3.6.1'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
     testCompile 'junit:junit:4.12'
 }
