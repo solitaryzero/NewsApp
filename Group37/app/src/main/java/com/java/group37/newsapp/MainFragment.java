@@ -174,7 +174,7 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
     public void onItemClick(AdapterView<?> parent, View view, int position,
                             long id) {
         //Toast.makeText(getActivity(), "Click item" + position, Toast.LENGTH_SHORT).show();
-        newsId = NewsList.get(position).news_ID;
+        newsId = NewsList.get(position-1).news_ID;
         oneThread=new OneUrlThread();
         oneThread.start();
         try {
