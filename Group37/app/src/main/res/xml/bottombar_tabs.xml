@@ -4,6 +4,10 @@
     android:layout_height="match_parent">
     <tabs>
         <tab
+            id="@+id/tab_friends"
+            icon="@drawable/ic_friends"
+            title="浏览" />
+        <tab
             id="@+id/tab_favorites"
             icon="@drawable/ic_favorites"
             title="收藏" />
@@ -11,9 +15,6 @@
             id="@+id/tab_recents"
             icon="@drawable/ic_recents"
             title="最近" />
-        <tab
-            id="@+id/tab_friends"
-            icon="@drawable/ic_friends"
-            title="我" />
+
     </tabs>
 </LinearLayout>

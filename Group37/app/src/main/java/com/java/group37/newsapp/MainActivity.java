@@ -1,9 +1,11 @@
 package com.java.group37.newsapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.IdRes;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -32,6 +34,8 @@ import com.java.group37.newsapp.util.GsonUtil;
 import com.java.group37.newsapp.widget.CircleFlowIndicator;
 import com.java.group37.newsapp.widget.ViewFlow;
 import com.gxz.PagerSlidingTabStrip;
+import com.roughike.bottombar.BottomBar;
+import com.roughike.bottombar.OnTabSelectListener;
 import com.trs.channellib.channel.channel.helper.ChannelDataHelepr;
 
 import java.io.ByteArrayOutputStream;
@@ -107,6 +111,17 @@ public class MainActivity extends BaseActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         //startActivity(new Intent(this, LayoutActivity.class));
+
+        BottomBar bottomBar = (BottomBar) findViewById(R.id.bottomBar);
+        bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
+            @Override
+            public void onTabSelected(@IdRes int tabId) {
+                if (tabId == R.id.tab_favorites) {
+                    Intent intent = new Intent(MainActivity.this, SeeFavorited.class);
+                    startActivity(intent);
+                }
+            }
+        });
 
     }
     @Override
