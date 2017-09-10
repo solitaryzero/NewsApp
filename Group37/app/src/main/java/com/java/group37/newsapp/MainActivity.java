@@ -118,6 +118,10 @@ public class MainActivity extends BaseActivity
                     Intent intent = new Intent(MainActivity.this, SeeFavorited.class);
                     startActivity(intent);
                 }
+                if (tabId == R.id.tab_recents) {
+                    Intent intent = new Intent(MainActivity.this, RecentActivity.class);
+                    startActivity(intent);
+                }
             }
         });
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);//最顶栏

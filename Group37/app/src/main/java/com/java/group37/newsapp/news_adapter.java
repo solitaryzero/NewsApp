@@ -55,7 +55,7 @@ public class news_adapter extends BaseAdapter {
         }
 
         News newsItem = mDatas.get(position);
-        holder.mTitle.setText(newsItem.news_Title);
+        holder.mTitle.setText(newsItem.news_Title+"                               ");
         holder.mContent.setText(newsItem.news_Content);
         holder.mDate.setText(newsItem.news_Time);
 
