@@ -65,7 +65,7 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
         ids.add(R.drawable.banner4);
 
         viewFlow.setAdapter(new ImageAdapter());
-        viewFlow.startAutoFlowTimer();
+        //viewFlow.startAutoFlowTimer();
 
         pageNo = 0;
         urlThread=new NewsUrlThread();
@@ -127,10 +127,20 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
                 urlThread.start();
                 try {
                     urlThread.join();
-                    if (!analyser.newsList.get(0).equals(NewsList.get(0)))
-                        for (int i = 0; i < analyser.newsList.size(); i++)
-                            if (!analyser.newsList.get(i).equals(NewsList.get(0)))
-                                NewsList.add(i, analyser.newsList.get(i));
+                    int flag;
+                    for (int i = 0; i < analyser.newsList.size(); i++)
+                    {
+                        flag = 0;
+                        for (int j = 0; j < NewsList.size(); j++)
+                            if (analyser.newsList.get(i).news_ID.equals(NewsList.get(j).news_ID)) {
+                                flag = 1;
+                                break;
+                            }
+                        if (flag == 0)
+                            NewsList.add(i, analyser.newsList.get(i));
+                    }
+
+
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
