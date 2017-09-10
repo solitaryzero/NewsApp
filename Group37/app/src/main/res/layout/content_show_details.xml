@@ -16,12 +16,34 @@
         android:layout_height="wrap_content"
         android:scrollbars="none"
         tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="8dp">
+        tools:layout_editor_absoluteY="8dp"
+        tools:ignore="MissingConstraints">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/HeaderPicture"
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+                android:scaleType="centerCrop"
+                android:layout_marginBottom="10dp"
+                app:srcCompat="@drawable/background_tab"
+                tools:ignore="ContentDescription" />
+
+            <HorizontalScrollView
+                android:id="@+id/PictureScroll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/Pictures"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal" />
+            </HorizontalScrollView>
 
             <TextView
                 android:id="@+id/NewsHeadline"
@@ -30,7 +52,9 @@
                 android:text="TextView"
                 android:textAlignment="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-                android:textSize="36sp"
+                android:textColor="@color/color_0babd1"
+                android:textSize="24sp"
+                android:layout_margin="20dp"
                 tools:layout_editor_absoluteX="8dp"
                 tools:layout_editor_absoluteY="2dp" />
 
@@ -45,9 +69,11 @@
                 android:id="@+id/NewsDetail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:lineSpacingMultiplier="1.5"
                 android:text="Hello World!"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textSize="24sp"
+                android:textSize="14sp"
+                android:layout_margin="20dp"
                 tools:layout_editor_absoluteX="8dp"
                 tools:layout_editor_absoluteY="103dp" />
         </LinearLayout>

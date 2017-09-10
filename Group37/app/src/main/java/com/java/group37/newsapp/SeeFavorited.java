@@ -36,6 +36,7 @@ public class SeeFavorited extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_see_favorited);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Favorited");
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_action_back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -44,7 +45,6 @@ public class SeeFavorited extends AppCompatActivity {
                 finish();
             }
         });
-        toolbar.setTitle("Favorited");
 
         String[] list = fileList();
         ListView fav = (ListView) findViewById(R.id.FavList);
@@ -60,7 +60,7 @@ public class SeeFavorited extends AppCompatActivity {
                     String details = "";
                     String s;
                     while ((s = br.readLine()) != null){
-                        details += s;
+                        details += s+'\n';
                     }
                     m.put("title",title);
                     m.put("details",details);
@@ -88,6 +88,9 @@ public class SeeFavorited extends AppCompatActivity {
                 HashMap<String,Object> hm = (HashMap<String,Object>) adapterView.getItemAtPosition(realPosition);
                 intent.putExtra("Headline",hm.get("title").toString());
                 intent.putExtra("Details",hm.get("details").toString());
+                String[] s = new String[1];
+                s[0] = "";
+                intent.putExtra("PictureList",s);
                 startActivity(intent);
             }
         });
@@ -111,7 +114,7 @@ public class SeeFavorited extends AppCompatActivity {
                     String details = "";
                     String s;
                     while ((s = br.readLine()) != null){
-                        details += s;
+                        details += s+'\n';
                     }
                     m.put("title",title);
                     m.put("details",details);
@@ -139,6 +142,9 @@ public class SeeFavorited extends AppCompatActivity {
                 HashMap<String,Object> hm = (HashMap<String,Object>) adapterView.getItemAtPosition(realPosition);
                 intent.putExtra("Headline",hm.get("title").toString());
                 intent.putExtra("Details",hm.get("details").toString());
+                String[] s = new String[1];
+                s[0] = "";
+                intent.putExtra("PictureList",s);
                 startActivity(intent);
             }
         });
