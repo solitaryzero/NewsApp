@@ -38,6 +38,10 @@
             android:label="@string/title_activity_see_favorited"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".RecentActivity"
+            android:label="RecentActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".SeeOriginalPicture"
             android:label="@string/title_activity_see_original_picture"
             android:theme="@style/AppTheme.NoActionBar"></activity>
