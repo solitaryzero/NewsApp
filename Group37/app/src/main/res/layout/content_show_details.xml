@@ -10,7 +10,7 @@
     tools:layout_editor_absoluteY="81dp"
     tools:layout_editor_absoluteX="0dp">
 
-    <ScrollView
+    <android.support.v4.widget.NestedScrollView
         android:id="@+id/DetailedNewsScroll"
         android:layout_width="368dp"
         android:layout_height="wrap_content"
@@ -23,15 +23,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
-            <ImageView
-                android:id="@+id/HeaderPicture"
-                android:layout_width="match_parent"
-                android:layout_height="160dp"
-                android:scaleType="centerCrop"
-                android:layout_marginBottom="10dp"
-                app:srcCompat="@drawable/background_tab"
-                tools:ignore="ContentDescription" />
 
             <HorizontalScrollView
                 android:id="@+id/PictureScroll"
@@ -77,6 +68,6 @@
                 tools:layout_editor_absoluteX="8dp"
                 tools:layout_editor_absoluteY="103dp" />
         </LinearLayout>
-    </ScrollView>
+    </android.support.v4.widget.NestedScrollView>
 
 </android.support.constraint.ConstraintLayout>
