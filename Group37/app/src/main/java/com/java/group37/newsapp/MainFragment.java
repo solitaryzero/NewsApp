@@ -1,5 +1,6 @@
 package com.java.group37.newsapp;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -31,14 +32,17 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
     ArrayList<HashMap<String, String>> mylist;
     SimpleAdapter adapter;
     private news_adapter newsAdapter;
+
     //******************************************
     private List<News> NewsList = new ArrayList<News>();//数据
     private ViewFlow viewFlow;
     private CircleFlowIndicator indicator;
     private List<Integer> ids;
     jsonAnalyserList analyser;
-
+    jsonAnalyserOne oneAnalyser;
+    String newsId;
     NewsUrlThread urlThread;
+    OneUrlThread oneThread;
 
     public MainFragment()   {}
     public MainFragment(int newsType)
@@ -169,9 +173,21 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
 
     public void onItemClick(AdapterView<?> parent, View view, int position,
                             long id) {
-        Toast.makeText(getActivity(), "Click item" + position, Toast.LENGTH_SHORT).show();
-        // click a item
-        //
+        //Toast.makeText(getActivity(), "Click item" + position, Toast.LENGTH_SHORT).show();
+        newsId = NewsList.get(position).news_ID;
+        oneThread=new OneUrlThread();
+        oneThread.start();
+        try {
+            oneThread.join();
+            News singleNews = oneAnalyser.news;
+            Intent intent = new Intent(MainActivity.mactivity, ShowDetails.class);
+            intent.putExtra("Headline", singleNews.news_Title);
+            String longString = singleNews.news_Content.replaceAll("\\s*", "\n");;
+            intent.putExtra("Details", longString);
+            startActivity(intent);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     class NewsUrlThread extends Thread {
@@ -184,6 +200,16 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
             Log.i("newsType",Integer.toString(newsType));
             Log.i("json",jsonString);
             analyser = new jsonAnalyserList(jsonString);
+        }
+    }
+
+    class OneUrlThread extends Thread {
+        @Override
+        public void run()
+        {
+            OneNewsAccesser oneAccesser = new OneNewsAccesser(newsId);
+            String jsonOneString = oneAccesser.stringBuilder.toString();
+            oneAnalyser = new jsonAnalyserOne(jsonOneString);
         }
     }
 }
