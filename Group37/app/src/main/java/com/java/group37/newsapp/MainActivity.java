@@ -113,6 +113,7 @@ public class MainActivity extends BaseActivity
         //startActivity(new Intent(this, LayoutActivity.class));
 
         BottomBar bottomBar = (BottomBar) findViewById(R.id.bottomBar);
+        bottomBar.selectTabWithId(R.id.tab_friends);
         bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
             public void onTabSelected(@IdRes int tabId) {
@@ -123,6 +124,12 @@ public class MainActivity extends BaseActivity
             }
         });
 
+    }
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        BottomBar bottomBar = (BottomBar) findViewById(R.id.bottomBar);
+        bottomBar.selectTabWithId(R.id.tab_friends);
     }
     @Override
     public void updateData() {

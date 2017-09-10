@@ -14,7 +14,8 @@
         <tab
             id="@+id/tab_recents"
             icon="@drawable/ic_recents"
-            title="最近" />
+            title="最近"
+            />
 
     </tabs>
 </LinearLayout>
