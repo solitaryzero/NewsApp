@@ -1,6 +1,7 @@
 package com.java.group37.newsapp;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -14,6 +15,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.java.group37.newsapp.widget.CircleFlowIndicator;
@@ -174,6 +176,8 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
     public void onItemClick(AdapterView<?> parent, View view, int position,
                             long id) {
         //Toast.makeText(getActivity(), "Click item" + position, Toast.LENGTH_SHORT).show();
+        TextView textView = (TextView) view.findViewById(R.id.title);
+        textView.setTextColor(Color.BLUE);
         newsId = NewsList.get(position-1).news_ID;
         oneThread=new OneUrlThread();
         oneThread.start();

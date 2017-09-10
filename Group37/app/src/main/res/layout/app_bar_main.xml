@@ -155,7 +155,8 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_alignParentBottom="true"
-            app:bb_tabXmlResource="@xml/bottombar_tabs" >
+            app:bb_tabXmlResource="@xml/bottombar_tabs"
+            >
 
         </com.roughike.bottombar.BottomBar>
         <!--<android.support.design.widget.BottomNavigationView
