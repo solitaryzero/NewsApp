@@ -31,11 +31,11 @@
             app:radius="4dp"/>
     </FrameLayout>-->
 
-    <com.java.group37.newsapp.RefreshListView
-        android:id="@+id/Nlistview"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent" >
-    </com.java.group37.newsapp.RefreshListView>
+        <com.java.group37.newsapp.RefreshListView
+            android:id="@+id/Nlistview"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" >
+        </com.java.group37.newsapp.RefreshListView>
 
 
 </LinearLayout>
