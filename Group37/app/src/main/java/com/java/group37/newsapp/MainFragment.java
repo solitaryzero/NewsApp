@@ -184,6 +184,8 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
             intent.putExtra("Headline", singleNews.news_Title);
             String longString = singleNews.news_Content.replaceAll("　", "\n");
             intent.putExtra("Details", longString);
+            String[] tmpList = singleNews.news_Pictures.split(";");
+            intent.putExtra("PictureList", tmpList);
             startActivity(intent);
         } catch (InterruptedException e) {
             e.printStackTrace();
