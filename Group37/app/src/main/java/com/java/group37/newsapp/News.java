@@ -25,6 +25,7 @@ public class News {
     public String crawl_Time;                //爬取时间
     public String news_Pictures;             //新闻的图片路径
     public String repeat_ID;                 //与该条新闻重复的新闻ID
+    public String original_String;
 
     public String seggedTitle;               //新闻分词后标题结果
     public List<String> seggedPListOfContent;//新闻正文的分词结果
@@ -57,6 +58,7 @@ public class News {
         news_Pictures = "";
         repeat_ID = "";
         seggedTitle = "";
+        original_String = "";
 
         seggedPListOfContent = new ArrayList<String>();
         persons = new ArrayList<String>();
@@ -89,6 +91,7 @@ public class News {
         this.news_Pictures = newOne.news_Pictures;
         this.repeat_ID = newOne.repeat_ID;
         this.seggedTitle = newOne.seggedTitle;
+        this.original_String = newOne.original_String;
 
         this.seggedPListOfContent = newOne.seggedPListOfContent;
         this.persons = newOne.persons;

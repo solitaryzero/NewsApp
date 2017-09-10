@@ -12,6 +12,7 @@ public class jsonAnalyserOne {
     jsonAnalyserOne (String jsonString) {
         try {
             JSONObject list = new JSONObject(jsonString.toString());
+            news.original_String = jsonString;
             news.newsClassTag = list.getString("newsClassTag");
             news.news_ID = list.getString("news_ID");
             news.news_Source = list.getString("news_Source");

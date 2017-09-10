@@ -16,9 +16,11 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
     <style name="StyledIndicators" parent="android:style/Theme.Light">
         <item name="vpiTabPageIndicatorStyle">@style/CustomTabPageIndicator</item>
     </style>
+
     <style name="CustomTabPageIndicator" parent="Widget.TabPageIndicator">
         <!-- 点击时在不同状态下显示的背景色 -->
         <!--   <item name="android:background">#ffffff</item>-->
