@@ -182,7 +182,7 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
             News singleNews = oneAnalyser.news;
             Intent intent = new Intent(MainActivity.mactivity, ShowDetails.class);
             intent.putExtra("Headline", singleNews.news_Title);
-            String longString = singleNews.news_Content.replaceAll("\\s*", "\n");;
+            String longString = singleNews.news_Content.replaceAll("　", "\n");
             intent.putExtra("Details", longString);
             startActivity(intent);
         } catch (InterruptedException e) {
