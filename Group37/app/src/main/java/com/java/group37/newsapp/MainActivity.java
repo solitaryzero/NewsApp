@@ -44,6 +44,8 @@ import cn.bingoogolapple.refreshlayout.BGARefreshLayout;
 public class MainActivity extends BaseActivity
         implements  BGARefreshLayout.BGARefreshLayoutDelegate,NavigationView.OnNavigationItemSelectedListener ,ChannelDataHelepr.ChannelDataRefreshListenter{
     private BGARefreshLayout mBGARefreshLayout;
+    public static MainActivity mactivity;
+    public static Context mainContext;
     private RecyclerView mRecyclerView;
     private Context mContext;
     /** title */
@@ -75,6 +77,8 @@ public class MainActivity extends BaseActivity
     private int needShowPosition=-1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        mactivity=this;
+        mainContext = this.getBaseContext();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mIndicator = (PagerSlidingTabStrip) findViewById(R.id.indicator);//导航栏
