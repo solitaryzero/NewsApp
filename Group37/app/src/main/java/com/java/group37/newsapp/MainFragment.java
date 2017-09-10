@@ -37,9 +37,9 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
 
     //******************************************
     private List<News> NewsList = new ArrayList<News>();//数据
-    private ViewFlow viewFlow;
-    private CircleFlowIndicator indicator;
-    private List<Integer> ids;
+   // private ViewFlow viewFlow;
+    //private CircleFlowIndicator indicator;
+    //private List<Integer> ids;
     jsonAnalyserList analyser;
     jsonAnalyserOne oneAnalyser;
     String newsId;
@@ -57,7 +57,7 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
     public void onActivityCreated(Bundle savedInstanceState) {
         mCache = ACache.get(MainActivity.mactivity);
         super.onActivityCreated(savedInstanceState);
-        viewFlow = (ViewFlow) view.findViewById(R.id.viewflow);
+        /*viewFlow = (ViewFlow) view.findViewById(R.id.viewflow);
         indicator = (CircleFlowIndicator) view.findViewById(R.id.viewflowindicator);
         viewFlow.setFlowIndicator(indicator);
 
@@ -67,7 +67,7 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
         ids.add(R.drawable.banner3);
         ids.add(R.drawable.banner4);
 
-        viewFlow.setAdapter(new ImageAdapter());
+        viewFlow.setAdapter(new ImageAdapter());*/
         //viewFlow.startAutoFlowTimer();
 
         pageNo = 0;
@@ -90,7 +90,7 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
         }
 
     }
-    private class ImageAdapter extends BaseAdapter {
+   /* private class ImageAdapter extends BaseAdapter {
         @Override
         public int getCount() {
             return ids.size();
@@ -112,7 +112,7 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
             imageView.setImageDrawable(getResources().getDrawable(ids.get(position)));
             return convertView;
         }
-    }
+    }*/
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
        view = inflater.inflate(R.layout.new_listview, null);

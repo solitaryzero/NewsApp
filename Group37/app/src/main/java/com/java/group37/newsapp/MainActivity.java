@@ -11,6 +11,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -91,22 +93,17 @@ public class MainActivity extends BaseActivity
         mViewPager.setAdapter(mAdapter);//导航栏适配器
 
         mIndicator.setViewPager(mViewPager);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);//最顶栏
-        toolbar.setTitle("SkyNews");
-        setSupportActionBar(toolbar);
+
         switch_view = findViewById(R.id.iv_subscibe);
         dataHelepr = new ChannelDataHelepr(this, (ChannelDataHelepr.ChannelDataRefreshListenter) this, findViewById(R.id.top_bar));
         dataHelepr.setSwitchView(switch_view);
         myChannels = new ArrayList<>();
         adapter = new TitleFragmentAdapter(getSupportFragmentManager(), myChannels);
         loadData();
-        
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
+
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -123,14 +120,23 @@ public class MainActivity extends BaseActivity
                 }
             }
         });
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);//最顶栏
+        toolbar.setTitle("SkyNews");
+        setSupportActionBar(toolbar);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
 
     }
+
     @Override
     protected void onRestart() {
         super.onRestart();
         BottomBar bottomBar = (BottomBar) findViewById(R.id.bottomBar);
         bottomBar.selectTabWithId(R.id.tab_friends);
     }
+
     @Override
     public void updateData() {
         loadData();
@@ -190,9 +196,9 @@ public class MainActivity extends BaseActivity
         }
         return result;
     }
-    public void setSupportActionBar(Toolbar supportActionBar) {
-        //this.supportActionBar = supportActionBar;
-    }
+    /*public void setSupportActionBar(Toolbar supportActionBar) {
+        this.supportActionBar = supportActionBar;
+    }*/
 
     private class ImageAdapter extends BaseAdapter {
 
@@ -230,11 +236,29 @@ public class MainActivity extends BaseActivity
             super.onBackPressed();
         }
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        final SearchView searchView = (SearchView)menu.findItem(R.id.ab_search).getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            //输入完成后，点击回车或是完成键
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if (query.length() > 0) {
+                    Log.e(query,"我是点击回车按钮");
+
+                }
+                return true;
+            }
+
+            //查询文本框有变化时事件
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
         return true;
     }
 

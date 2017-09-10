@@ -31,7 +31,7 @@
         android:layout_centerInParent="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-</RelativeLayout>
+    </RelativeLayout>
 
     <!--<com.gxz.PagerSlidingTabStrip
         android:id="@+id/tabs"
@@ -102,7 +102,8 @@
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:orientation="vertical"
-        android:layout_below="@+id/appBarLayout">
+        android:layout_below="@+id/appBarLayout"
+        android:id="@+id/linearLayout">
         <LinearLayout
             android:layout_below="@+id/top_bar"
             android:orientation="horizontal"
@@ -165,6 +166,7 @@
             android:layout_alignParentBottom="true"
             app:menu="@menu/buttom"/>-->
     </LinearLayout>
+
     <!--<com.roughike.bottombar.BottomBar
         android:id="@+id/bottomBar"
         android:layout_width="match_parent"
