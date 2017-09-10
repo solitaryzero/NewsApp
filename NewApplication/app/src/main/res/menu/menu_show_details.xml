@@ -6,4 +6,8 @@
         android:title="Favorite"
         android:icon="@drawable/ic_empty_star"
         app:showAsAction="ifRoom"/>
+    <item android:id="@+id/action_read"
+        android:title="Read"
+        android:icon="@drawable/ic_play_arrow"
+        app:showAsAction="ifRoom"/>
 </menu>

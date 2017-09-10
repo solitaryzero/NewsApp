@@ -2,6 +2,7 @@ package com.example.sam.newapplication;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -14,11 +15,15 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.os.Build;
 import java.io.*;
 import java.security.MessageDigest;
 import java.util.Arrays;
+import java.util.Locale;
 
 public class ShowDetails extends AppCompatActivity {
+
+    private TextToSpeech tts = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +47,21 @@ public class ShowDetails extends AppCompatActivity {
         TextView details = (TextView) findViewById(R.id.NewsDetail);
         headline.setText(headlineStr);
         details.setText(detailsStr);
+
+        tts = new TextToSpeech(this,new TextToSpeech.OnInitListener(){
+
+            @Override
+            public void onInit(int status) {
+                if (status==TextToSpeech.SUCCESS) {
+                    int supported = tts.setLanguage(Locale.CHINESE);
+                    if ((supported!=TextToSpeech.LANG_AVAILABLE)&&(supported!=TextToSpeech.LANG_COUNTRY_AVAILABLE)) {
+                        Toast.makeText(ShowDetails.this, "不支持当前语言！", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
+
+
     }
 
     @Override
@@ -83,6 +103,15 @@ public class ShowDetails extends AppCompatActivity {
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if (tts!=null) {
+            tts.shutdown();//关闭TTS
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -117,6 +146,13 @@ public class ShowDetails extends AppCompatActivity {
             }
 
             return super.onOptionsItemSelected(item);
+        } else if (id == R.id.action_read){
+            TextView detail = (TextView) findViewById(R.id.NewsDetail);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                tts.speak(detail.getText().toString(),TextToSpeech.QUEUE_FLUSH,null,null);
+            } else {
+                tts.speak(detail.getText().toString(), TextToSpeech.QUEUE_FLUSH, null);
+            }
         }
         return true;
     }
