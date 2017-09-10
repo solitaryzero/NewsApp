@@ -194,6 +194,7 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
         newsId = NewsList.get(position-1).news_ID;
 
         String tmpString = mCache.getAsString(newsId);
+        //String tmpString = null;
         if (tmpString == null) {
             oneThread = new OneUrlThread();
             oneThread.start();
@@ -216,7 +217,11 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
                 intent.putExtra("Headline", singleNews.news_Title);
                 String longString = singleNews.news_Content.replaceAll("　", "\n");
                 intent.putExtra("Details", longString);
-                String[] tmpList = singleNews.news_Pictures.split(";");
+                String[] tmpList = singleNews.news_Pictures.split("[ ;]");
+                if(tmpList.length == 0) {
+                    tmpList = new String[1];
+                    tmpList[0] = "";
+                }
                 intent.putExtra("PictureList", tmpList);
                 startActivity(intent);
             } catch (InterruptedException e) {
@@ -230,7 +235,11 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
             intent.putExtra("Headline", singleNews.news_Title);
             String longString = singleNews.news_Content.replaceAll("　", "\n");
             intent.putExtra("Details", longString);
-            String[] tmpList = singleNews.news_Pictures.split(";");
+            String[] tmpList = singleNews.news_Pictures.split("[ ;]");
+            if(tmpList.length == 0) {
+                tmpList = new String[1];
+                tmpList[0] = "";
+            }
             intent.putExtra("PictureList", tmpList);
             startActivity(intent);
         }
