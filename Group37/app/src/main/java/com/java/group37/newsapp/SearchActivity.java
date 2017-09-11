@@ -43,6 +43,7 @@ public class SearchActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        mCache = ACache.get(MainActivity.mactivity);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -57,7 +58,6 @@ public class SearchActivity extends AppCompatActivity
                 finish();
             }
         });
-        mCache = ACache.get(MainActivity.mactivity);
         list = (RefreshListView) findViewById (R.id.Nlistview);
         Intent intent = getIntent();
         searchKeywords = intent.getStringExtra("Keywords");

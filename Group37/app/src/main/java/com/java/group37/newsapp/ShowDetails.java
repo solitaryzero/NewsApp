@@ -45,6 +45,7 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.target.ViewTarget;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import static android.os.Environment.getExternalStorageDirectory;
 
