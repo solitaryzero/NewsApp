@@ -3,8 +3,10 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Group37.iml" filepath="$PROJECT_DIR$/Group37.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Group37.iml" filepath="$PROJECT_DIR$/Group37.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/channellib/channellib.iml" filepath="$PROJECT_DIR$/channellib/channellib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/channeltagviewLib1/channeltagviewLib1.iml" filepath="$PROJECT_DIR$/channeltagviewLib1/channeltagviewLib1.iml" />
       <module fileurl="file://$PROJECT_DIR$/channeltagviewLib1/channeltagviewLib1.iml" filepath="$PROJECT_DIR$/channeltagviewLib1/channeltagviewLib1.iml" />
     </modules>
   </component>

@@ -4,20 +4,20 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="发现" />
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="切换到有图模式" />
         <item
             android:id="@+id/nav_gallery"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="缓存管理" />
+            android:title="切换到无图模式" />
         <item
             android:id="@+id/nav_slideshow"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="频道管理" />
+            android:title="切换到夜间模式" />
         <item
             android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="设置" />
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="切换到日间模式" />
     </group>
 
     <item android:title="社区">
