@@ -1,7 +1,9 @@
 package com.java.group37.newsapp;
 
 import android.os.Bundle;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Toast;
 
@@ -15,6 +17,8 @@ import java.util.ArrayList;
 
 import cn.bingoogolapple.badgeview.BGABadgeTextView;
 
+import static com.java.group37.newsapp.R.menu.drawer;
+
 public class ChannelActivity extends AppCompatActivity {
     private ChannelTagView channelTagView;
     private ArrayList<ChannelItem> addedChannels = new ArrayList<>();
@@ -27,7 +31,16 @@ public class ChannelActivity extends AppCompatActivity {
         setContentView(R.layout.channel_manager);
         channelTagView = (ChannelTagView) findViewById(R.id.channel_tag_view);
         initData();
-
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);//最顶栏
+        toolbar.setTitle("ChannelManage");
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_action_back);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
         channelTagView.showPahtAnim(false);
 //        channelTagView.oPenCategory(true);
 //        channelTagView.showItemDrawableLeft(true);
