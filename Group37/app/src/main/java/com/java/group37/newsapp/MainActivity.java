@@ -53,6 +53,7 @@ public class MainActivity extends BaseActivity
     private BGARefreshLayout mBGARefreshLayout;
     public static MainActivity mactivity;
     public static Context mainContext;
+    private ACache mCache;
     private RecyclerView mRecyclerView;
     private Context mContext;
     /** title */
@@ -93,6 +94,8 @@ public class MainActivity extends BaseActivity
         mAdapter = new TabAdapter(getSupportFragmentManager());//导航栏
         mViewPager.setAdapter(mAdapter);//导航栏适配器
 
+
+        mCache = ACache.get(MainActivity.mactivity);
         //mAdapter.removeFragment("财经");
 
 
@@ -103,9 +106,10 @@ public class MainActivity extends BaseActivity
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, ChannelActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, 1357);
             }
         });
+
         //dataHelepr = new ChannelDataHelepr(this, (ChannelDataHelepr.ChannelDataRefreshListenter) this, findViewById(R.id.top_bar));
         //dataHelepr.setSwitchView(switch_view);
         //myChannels = new ArrayList<>();
@@ -145,6 +149,20 @@ public class MainActivity extends BaseActivity
         toggle.syncState();
 
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 1357 && resultCode == 2468)
+        {
+            String added_channels = data.getStringExtra("result");
+            mAdapter.modify(added_channels);
+            mViewPager.setAdapter(mAdapter);
+            mIndicator.setViewPager(mViewPager);
+        }
+    }
+
 
     @Override
     protected void onRestart() {
@@ -278,6 +296,7 @@ public class MainActivity extends BaseActivity
                 if (query.length() > 0) {
                     Log.e(query,"我是点击回车按钮");
                     Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+                    intent.putExtra("Keywords", query);
                     startActivity(intent);
                 }
                 return true;

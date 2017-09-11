@@ -3,6 +3,8 @@ package com.java.group37.newsapp;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.util.Log;
+import android.view.ViewGroup;
 
 import java.util.*;
 /**
@@ -25,8 +27,7 @@ public class TabAdapter extends FragmentPagerAdapter
         mTitles = new ArrayList<String>();
         mCache = ACache.get(MainActivity.mactivity);
         String tmpTitles = mCache.getAsString("TitlesSavedInCache");
-        //if (tmpTitles == null)
-        if(true)
+        if (tmpTitles == null)
         {
             for (int i = 0; i < titles.length; i++)
                 mTitles.add(titles[i]);
@@ -42,6 +43,11 @@ public class TabAdapter extends FragmentPagerAdapter
                 mTitles.add(listTitles[i]);
         }
     }
+
+    @Override
+    public int getItemPosition(Object object) {
+        return TabAdapter.POSITION_NONE;
+    }
     public Fragment getItem(int arg0) {
         MainFragment fragment = new MainFragment(arg0);
         return fragment;
@@ -52,25 +58,16 @@ public class TabAdapter extends FragmentPagerAdapter
     public int getCount(){
         return mTitles.size();
     }
-    public void addFragment(String title){
-        mTitles.add(title);
-        notifyDataSetChanged();
-        String tmpTitles = mCache.getAsString("TitlesSavedInCache");
-        tmpTitles += " " + title;
-        mCache.remove("TitlesSavedInCache");
-        mCache.put("TitlesSavedInCache", tmpTitles);
-    }
+    public void modify(String nowTitles){
+        Log.e ("added_channels", nowTitles);
+        mTitles = new ArrayList<String>();
+        String[] TitlesList = nowTitles.split(" ");
+        for (int i = 0; i < TitlesList.length; i++)
+            mTitles.add(TitlesList[i]);
 
-    public void removeFragment(String title){
-        int index = mTitles.indexOf(title);
-        if (index == -1)
-            return;
-        mTitles.remove(index);
         notifyDataSetChanged();
-        String tmpTitles = mTitles.get(0);
-        for (int i = 1; i < mTitles.size(); i++)
-            tmpTitles += " " + mTitles.get(i);
+
         mCache.remove("TitlesSavedInCache");
-        mCache.put("TitlesSavedInCache",tmpTitles);
+        mCache.put("TitlesSavedInCache", nowTitles);
     }
 }
