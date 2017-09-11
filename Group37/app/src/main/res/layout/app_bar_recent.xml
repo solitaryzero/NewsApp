@@ -40,15 +40,16 @@
         android:orientation="vertical"
         android:layout_below="@+id/appBarLayout"
         android:id="@+id/linearLayout"
-        android:weightSum="1">
+        android:weightSum="1"
+       >
 
 
         <com.java.group37.newsapp.RefreshListView
             android:id="@+id/Nlistview"
             android:layout_width="match_parent"
-            android:layout_height="406dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:layout_above="@+id/bottomBar"
-            android:layout_weight="1.13"
             android:background="@color/color_white">
         </com.java.group37.newsapp.RefreshListView>
 
@@ -56,6 +57,7 @@
             android:id="@+id/bottomBar"
             android:layout_width="match_parent"
             android:layout_height="60dp"
+
             android:layout_alignParentBottom="true"
             app:bb_tabXmlResource="@xml/bottombar_tabs"
             android:background="@color/color_white"
