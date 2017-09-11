@@ -55,6 +55,12 @@ public class RecentActivity extends AppCompatActivity
         list = (RefreshListView) findViewById (R.id.Nlistview);
         newsAdapter = new news_adapter(this,NewsList);
         list.setAdapter(newsAdapter);
+		 list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Log.e("aa","click");
+            }
+        });
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
