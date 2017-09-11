@@ -233,11 +233,19 @@ public class ShowDetails extends AppCompatActivity {
 
             return super.onOptionsItemSelected(item);
         } else if (id == R.id.action_read){
-            TextView detail = (TextView) findViewById(R.id.NewsDetail);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                tts.speak(detail.getText().toString(),TextToSpeech.QUEUE_FLUSH,null,null);
-            } else {
-                tts.speak(detail.getText().toString(), TextToSpeech.QUEUE_FLUSH, null);
+            if (!tts.isSpeaking())
+            {
+                TextView detail = (TextView) findViewById(R.id.NewsDetail);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    tts.speak(detail.getText().toString(),TextToSpeech.QUEUE_FLUSH,null,null);
+                } else {
+                    tts.speak(detail.getText().toString(), TextToSpeech.QUEUE_FLUSH, null);
+                }
+                item.setIcon(R.drawable.ic_stop);
+            }
+            else {
+                tts.stop();
+                item.setIcon(R.drawable.ic_play_arrow);
             }
         }
         return true;
