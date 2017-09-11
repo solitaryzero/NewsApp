@@ -2,6 +2,7 @@ package com.java.group37.newsapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
@@ -18,6 +19,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.roughike.bottombar.BottomBar;
+import com.roughike.bottombar.OnTabSelectListener;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -52,6 +54,21 @@ public class SeeFavorited extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 finish();
+            }
+        });
+        BottomBar bottomBar = (BottomBar) findViewById(R.id.bottomBar);
+        bottomBar.selectTabWithId(R.id.tab_favorites);
+        bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
+            @Override
+            public void onTabSelected(@IdRes int tabId) {
+                if (tabId == R.id.tab_recents) {
+                    Intent intent = new Intent(SeeFavorited.this, RecentActivity.class);
+                    startActivity(intent);
+                }
+                if (tabId == R.id.tab_friends) {
+                    Intent intent = new Intent(SeeFavorited.this, MainActivity.class);
+                    startActivity(intent);
+                }
             }
         });
     }

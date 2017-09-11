@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/color_white"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.java.group37.newsapp.ShowDetails"
     tools:showIn="@layout/activity_show_details"
@@ -11,6 +12,7 @@
     tools:layout_editor_absoluteX="0dp">
 
     <android.support.v4.widget.NestedScrollView
+        android:background="@color/color_white"
         android:id="@+id/DetailedNewsScroll"
         android:layout_width="368dp"
         android:layout_height="wrap_content"
@@ -22,7 +24,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:background="@color/color_white">
 
             <HorizontalScrollView
                 android:id="@+id/PictureScroll"
@@ -45,6 +48,7 @@
                 android:textAlignment="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                 android:textColor="@color/color_0babd1"
+                android:background="@color/color_white"
                 android:textSize="24sp"
                 android:layout_margin="20dp"
                 tools:layout_editor_absoluteX="8dp"
@@ -55,7 +59,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="--------------------------------------------------------------------------"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:background="@color/color_white"
+                android:textColor="@color/color_2b2b2b"/>
 
             <TextView
                 android:id="@+id/NewsDetail"
@@ -63,6 +69,8 @@
                 android:layout_height="wrap_content"
                 android:lineSpacingMultiplier="1.5"
                 android:text="Hello World!"
+                android:background="@color/color_white"
+                android:textColor="@color/color_2b2b2b"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textSize="14sp"
                 android:layout_margin="20dp"
