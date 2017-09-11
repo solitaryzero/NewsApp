@@ -92,7 +92,7 @@ public class MainActivity extends BaseActivity
         mAdapter = new TabAdapter(getSupportFragmentManager());//导航栏
         mViewPager.setAdapter(mAdapter);//导航栏适配器
 
-        mAdapter.removeFragment("财经");
+        //mAdapter.removeFragment("财经");
 
 
         mIndicator.setViewPager(mViewPager);

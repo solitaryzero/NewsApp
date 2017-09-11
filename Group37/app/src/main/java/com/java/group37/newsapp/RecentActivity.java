@@ -15,6 +15,7 @@ import com.roughike.bottombar.BottomBar;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by DELL on 2017/9/10.
@@ -23,7 +24,7 @@ public class RecentActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private ACache mCache;
-
+    private List<News> NewsList = new ArrayList<News>();
     RefreshListView list;
     private news_adapter newsAdapter;
     @Override
@@ -38,10 +39,22 @@ public class RecentActivity extends AppCompatActivity
 
         mCache = ACache.get(MainActivity.mactivity);
         String nowFileString = mCache.getAsString("FileToSaveNews");
+        String[] recentNewsList;
         if (nowFileString == null)
-            nowFileString = "NULL";
+            recentNewsList = new String[0];
+        else
+            recentNewsList = nowFileString.split(" ");
         Log.i("nowFile", nowFileString);
-
+        for (int i = 0; i < recentNewsList.length; i++)
+        {
+            String jsonOneString = mCache.getAsString(recentNewsList[recentNewsList.length - i - 1]);
+            jsonAnalyserOne oneAnalyser = new jsonAnalyserOne(jsonOneString);
+            News singleNews = oneAnalyser.news;
+            NewsList.add(singleNews);
+        }
+        list = (RefreshListView) findViewById (R.id.Nlistview);
+        newsAdapter = new news_adapter(this,NewsList);
+        list.setAdapter(newsAdapter);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -49,7 +62,6 @@ public class RecentActivity extends AppCompatActivity
 
         BottomBar bottomBar = (BottomBar) findViewById(R.id.bottomBar);
         bottomBar.selectTabWithId(R.id.tab_recents);
-        list = (RefreshListView) findViewById (R.id.Nlistview);
 
     }
     @Override
