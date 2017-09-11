@@ -31,8 +31,6 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
     private int pageNo = 0;
     View view;
     RefreshListView list;
-    ArrayList<HashMap<String, String>> mylist;
-    SimpleAdapter adapter;
     private news_adapter newsAdapter;
 
     //******************************************
@@ -57,18 +55,6 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
     public void onActivityCreated(Bundle savedInstanceState) {
         mCache = ACache.get(MainActivity.mactivity);
         super.onActivityCreated(savedInstanceState);
-        /*viewFlow = (ViewFlow) view.findViewById(R.id.viewflow);
-        indicator = (CircleFlowIndicator) view.findViewById(R.id.viewflowindicator);
-        viewFlow.setFlowIndicator(indicator);
-
-        ids = new ArrayList<Integer>();
-        ids.add(R.drawable.banner1);
-        ids.add(R.drawable.banner2);
-        ids.add(R.drawable.banner3);
-        ids.add(R.drawable.banner4);
-
-        viewFlow.setAdapter(new ImageAdapter());*/
-        //viewFlow.startAutoFlowTimer();
 
         pageNo = 0;
         urlThread=new NewsUrlThread();
@@ -90,29 +76,6 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
         }
 
     }
-   /* private class ImageAdapter extends BaseAdapter {
-        @Override
-        public int getCount() {
-            return ids.size();
-        }
-        @Override
-        public Object getItem(int position) {
-            return ids.get(position);
-        }
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null){
-                convertView = getActivity().getLayoutInflater().inflate(R.layout.viewflow_imageviewitem, null);
-            }
-            ImageView imageView = (ImageView) convertView.findViewById(R.id.banner_img);
-            imageView.setImageDrawable(getResources().getDrawable(ids.get(position)));
-            return convertView;
-        }
-    }*/
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
        view = inflater.inflate(R.layout.new_listview, null);
@@ -122,8 +85,6 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
     public void onDownPullRefresh() {
         new AsyncTask<Void, Void, Void>() {
             protected Void doInBackground(Void... params) {
-                //SystemClock.sleep(1000);
-//**********************************************************************
                 //这里是下拉刷新的新闻
                 pageNo = 0;
                 urlThread=new NewsUrlThread();
@@ -148,7 +109,6 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
                     e.printStackTrace();
                 }
 
-//**********************************************************************
                 return null;
             }
             protected void onPostExecute(Void result){
@@ -161,10 +121,7 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
     public void onLoadingMore() {
         new AsyncTask<Void, Void, Void>() {
             protected Void doInBackground(Void... params) {
-                //SystemClock.sleep(1000);
-//**************************************************************
                 //这里是需要下滑到底部需要添加的数据：
-                // update later
                 pageNo = NewsList.size();
                 urlThread=new NewsUrlThread();
                 urlThread.start();
@@ -176,7 +133,6 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
                     e.printStackTrace();
                 }
 
-//**************************************************************
                 return null;
             }
             protected void onPostExecute(Void result) {
