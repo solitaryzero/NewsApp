@@ -113,11 +113,7 @@ public class MainActivity extends BaseActivity
         //loadData();
 
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
         //startActivity(new Intent(this, LayoutActivity.class));
 
         BottomBar bottomBar = (BottomBar) findViewById(R.id.bottomBar);
@@ -135,6 +131,11 @@ public class MainActivity extends BaseActivity
                 }
             }
         });
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);//最顶栏
         toolbar.setTitle("SkyNews");
         setSupportActionBar(toolbar);
@@ -150,6 +151,19 @@ public class MainActivity extends BaseActivity
         super.onRestart();
         BottomBar bottomBar = (BottomBar) findViewById(R.id.bottomBar);
         bottomBar.selectTabWithId(R.id.tab_friends);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);//最顶栏
+        toolbar.setTitle("SkyNews");
+        setSupportActionBar(toolbar);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
     }
 
     /*@Override
@@ -263,7 +277,8 @@ public class MainActivity extends BaseActivity
             public boolean onQueryTextSubmit(String query) {
                 if (query.length() > 0) {
                     Log.e(query,"我是点击回车按钮");
-
+                    Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+                    startActivity(intent);
                 }
                 return true;
             }
