@@ -72,7 +72,6 @@ public class news_adapter extends BaseAdapter {
             holder.mImg.setVisibility(View.VISIBLE);
             String tmpPicture = tmpPictures[0];
             File file = new File(tmpPicture);
-            Log.e("picpath",file.getAbsolutePath());
             //加载图片
             Glide.with(SeeFavorited.sfactivity).load(file).placeholder(R.drawable.loading).error(R.drawable.not_found).dontAnimate().into(holder.mImg);
         }
