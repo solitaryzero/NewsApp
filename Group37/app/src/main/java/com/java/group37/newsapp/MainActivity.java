@@ -74,7 +74,7 @@ public class MainActivity extends BaseActivity
     private List<Integer> ids;
     private PagerSlidingTabStrip mIndicator;
     private ViewPager mViewPager;
-    private FragmentPagerAdapter mAdapter ;
+    private TabAdapter mAdapter ;
     private BottomNavigationView butttom;
     View switch_view;
     TitleFragmentAdapter adapter;
@@ -91,6 +91,9 @@ public class MainActivity extends BaseActivity
         mViewPager = (ViewPager) findViewById(R.id.pager);//导航栏下的page
         mAdapter = new TabAdapter(getSupportFragmentManager());//导航栏
         mViewPager.setAdapter(mAdapter);//导航栏适配器
+
+        mAdapter.removeFragment("财经");
+
 
         mIndicator.setViewPager(mViewPager);
 

@@ -62,14 +62,17 @@ public class news_adapter extends BaseAdapter {
         //******************************************************
         //处理文章是否有无图片链接
         //******************************************************
-        if(!newsItem.news_Pictures.equals("")){
+        String[] tmpPictures = newsItem.news_Pictures.split("[ ;]");
+        if(!newsItem.news_Pictures.equals("")&&tmpPictures.length != 0){
             holder.mImg.setVisibility(View.VISIBLE);
-            String tmpPictures = newsItem.news_Pictures.split(";")[0];
-            Glide.with(MainActivity.mactivity).load(tmpPictures).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.drawable.common_progressbar).dontAnimate().into(holder.mImg);
+            String tmpPicture = tmpPictures[0];
+            Glide.with(MainActivity.mactivity).load(tmpPicture).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.drawable.loading).error(R.drawable.not_found).dontAnimate().into(holder.mImg);
+            //Glide.with(MainActivity.mactivity).load(tmpPictures).diskCacheStrategy(DiskCacheStrategy.ALL).dontAnimate().into(holder.mImg);
             //**********************
         }
         else{
-            holder.mImg.setVisibility(View.GONE);
+            holder.mImg.setVisibility(View.VISIBLE);
+            Glide.with(MainActivity.mactivity).load(R.drawable.not_found).dontAnimate().into(holder.mImg);
         }
         return view;
     }

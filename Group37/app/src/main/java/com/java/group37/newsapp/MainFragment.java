@@ -31,8 +31,6 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
     private int pageNo = 0;
     View view;
     RefreshListView list;
-    ArrayList<HashMap<String, String>> mylist;
-    SimpleAdapter adapter;
     private news_adapter newsAdapter;
 
     //******************************************
@@ -85,8 +83,6 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
     public void onDownPullRefresh() {
         new AsyncTask<Void, Void, Void>() {
             protected Void doInBackground(Void... params) {
-                //SystemClock.sleep(1000);
-//**********************************************************************
                 //这里是下拉刷新的新闻
                 pageNo = 0;
                 urlThread=new NewsUrlThread();
@@ -111,7 +107,6 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
                     e.printStackTrace();
                 }
 
-//**********************************************************************
                 return null;
             }
             protected void onPostExecute(Void result){
@@ -124,10 +119,7 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
     public void onLoadingMore() {
         new AsyncTask<Void, Void, Void>() {
             protected Void doInBackground(Void... params) {
-                //SystemClock.sleep(1000);
-//**************************************************************
                 //这里是需要下滑到底部需要添加的数据：
-                // update later
                 pageNo = NewsList.size();
                 urlThread=new NewsUrlThread();
                 urlThread.start();
@@ -139,7 +131,6 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
                     e.printStackTrace();
                 }
 
-//**************************************************************
                 return null;
             }
             protected void onPostExecute(Void result) {
@@ -157,6 +148,7 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
         newsId = NewsList.get(position-1).news_ID;
 
         String tmpString = mCache.getAsString(newsId);
+        //String tmpString = null;
         if (tmpString == null) {
             oneThread = new OneUrlThread();
             oneThread.start();
@@ -179,7 +171,11 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
                 intent.putExtra("Headline", singleNews.news_Title);
                 String longString = singleNews.news_Content.replaceAll("　", "\n");
                 intent.putExtra("Details", longString);
-                String[] tmpList = singleNews.news_Pictures.split(";");
+                String[] tmpList = singleNews.news_Pictures.split("[ ;]");
+                if(tmpList.length == 0) {
+                    tmpList = new String[1];
+                    tmpList[0] = "";
+                }
                 intent.putExtra("PictureList", tmpList);
                 startActivity(intent);
             } catch (InterruptedException e) {
@@ -193,7 +189,11 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
             intent.putExtra("Headline", singleNews.news_Title);
             String longString = singleNews.news_Content.replaceAll("　", "\n");
             intent.putExtra("Details", longString);
-            String[] tmpList = singleNews.news_Pictures.split(";");
+            String[] tmpList = singleNews.news_Pictures.split("[ ;]");
+            if(tmpList.length == 0) {
+                tmpList = new String[1];
+                tmpList[0] = "";
+            }
             intent.putExtra("PictureList", tmpList);
             startActivity(intent);
         }
