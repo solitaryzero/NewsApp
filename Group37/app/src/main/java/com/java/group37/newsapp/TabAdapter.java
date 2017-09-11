@@ -49,7 +49,14 @@ public class TabAdapter extends FragmentPagerAdapter
         return TabAdapter.POSITION_NONE;
     }
     public Fragment getItem(int arg0) {
-        MainFragment fragment = new MainFragment(arg0);
+        String tmpTitles = mCache.getAsString("TitlesSavedInCache");
+        String[] TitlesList = tmpTitles.split(" ");
+        String nowTitle = TitlesList[arg0];
+        int i = 0;
+        for (i = 0; i < 13; i++)
+            if (nowTitle.equals(titles[i]))
+                break;
+        MainFragment fragment = new MainFragment(i);
         return fragment;
     }
     public CharSequence getPageTitle(int position) {

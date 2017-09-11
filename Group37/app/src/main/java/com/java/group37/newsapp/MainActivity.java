@@ -89,6 +89,7 @@ public class MainActivity extends BaseActivity
     protected void onCreate(Bundle savedInstanceState) {
         //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         mactivity=this;
+        mCache = ACache.get(MainActivity.mactivity);
         mainContext = this.getBaseContext();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -98,7 +99,7 @@ public class MainActivity extends BaseActivity
         mViewPager.setAdapter(mAdapter);//导航栏适配器
 
 
-        mCache = ACache.get(MainActivity.mactivity);
+
         //mAdapter.removeFragment("财经");
 
 
