@@ -35,7 +35,7 @@ public class News {
     public List<String> locations;           //地点列表
     public List<String> organizations;       //组织机构列表
     public List<String> Keywords;            //新闻中关键词列表
-    public List<Integer> Keyword_score;
+    public List<Double> Keyword_score;
 
     public int wordCountOfTitle;
     public int wordCountOfContent;
@@ -70,7 +70,7 @@ public class News {
         locations = new ArrayList<String>();
         organizations = new ArrayList<String>();
         Keywords = new ArrayList<String>();
-        Keyword_score = new ArrayList<Integer>();
+        Keyword_score = new ArrayList<Double>();
 
         wordCountOfTitle = 0;
         wordCountOfContent = 0;
@@ -100,6 +100,48 @@ public class News {
         this.original_String = newOne.original_String;
         this.isUsingLocalPictures = newOne.isUsingLocalPictures;
         this.LocalPictures = newOne.LocalPictures;
+
+        this.seggedPListOfContent = newOne.seggedPListOfContent;
+        this.persons = newOne.persons;
+        this.locations = newOne.locations;
+        this.organizations = newOne.organizations;
+        this.Keywords = newOne.Keywords;
+
+        this.wordCountOfTitle = newOne.wordCountOfTitle ;
+        this.wordCountOfContent = newOne.wordCountOfContent;
+    }
+
+    News(String rawJSONString, String[] local_pictures)
+    {
+        jsonAnalyserOne oneAnalyser = new jsonAnalyserOne(rawJSONString);
+        News newOne = oneAnalyser.news;
+        this.newsClassTag = newOne.newsClassTag;
+        this.news_ID = newOne.news_ID;
+        this.news_Source = newOne.news_Source;
+        this.news_Title = newOne.news_Title;
+        this.news_Time = newOne.news_Time;
+        this.news_URL = newOne.news_URL;
+        this.news_Author = newOne.news_Author;
+        this.lang_Type = newOne.lang_Type;
+        this.news_Video = newOne.news_Video ;
+        this.news_Intro = newOne.news_Intro;
+        this.news_Category = newOne.news_Category;
+        this.inborn_KeyWords = newOne.inborn_KeyWords;
+        this.news_Content = newOne.news_Content;
+        this.crawl_Source = newOne.crawl_Source;
+        this.news_Journal = newOne.news_Journal;
+        this.crawl_Time = newOne.crawl_Time;
+        this.news_Pictures = newOne.news_Pictures;
+        this.repeat_ID = newOne.repeat_ID;
+        this.seggedTitle = newOne.seggedTitle;
+        this.original_String = newOne.original_String;
+        this.isUsingLocalPictures = true;
+
+        if (local_pictures.length > 0)
+            this.LocalPictures = local_pictures[0];
+        for (int i = 1; i < local_pictures.length; i++) {
+            this.LocalPictures += " " + local_pictures[i];
+        }
 
         this.seggedPListOfContent = newOne.seggedPListOfContent;
         this.persons = newOne.persons;

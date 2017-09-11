@@ -31,11 +31,11 @@ public class jsonAnalyserOne {
             news.repeat_ID = list.getString("repeat_ID");
             JSONArray infArray = list.getJSONArray("Keywords");
             news.Keywords = new ArrayList<String>();
-            news.Keyword_score = new ArrayList<Integer>();
+            news.Keyword_score = new ArrayList<Double>();
             for (int i = 0; i < infArray.length(); i++) {
                 JSONObject inf_Array = infArray.getJSONObject(i);
                 String word = inf_Array.getString("word");
-                Integer score = inf_Array.getInt("score");
+                Double score = inf_Array.getDouble("score");
                 news.Keywords.add(word);
                 news.Keyword_score.add(score);
             }

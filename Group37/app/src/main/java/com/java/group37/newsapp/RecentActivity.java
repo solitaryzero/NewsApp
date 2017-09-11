@@ -61,7 +61,7 @@ public class RecentActivity extends AppCompatActivity
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.e("aa","click "+ i + " " + l);
+                //Log.e("aa","click "+ i + " " + l);
                 News singleNews = NewsList.get(i-1);
                 Intent intent = new Intent(RecentActivity.this, ShowDetails.class);
                 intent.putExtra("Headline", singleNews.news_Title);

@@ -22,6 +22,7 @@ import com.java.group37.newsapp.widget.CircleFlowIndicator;
 import com.java.group37.newsapp.widget.ViewFlow;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -35,14 +36,21 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
 
     //******************************************
     private List<News> NewsList = new ArrayList<News>();//数据
+    private List<News> RecommendList = new ArrayList<News>();
+    String searchKeywords;
    // private ViewFlow viewFlow;
     //private CircleFlowIndicator indicator;
     //private List<Integer> ids;
     jsonAnalyserList analyser;
     jsonAnalyserOne oneAnalyser;
+    jsonAnalyserOne recommendAnalyser;
     String newsId;
+    String newsIdRecommend;
+
     NewsUrlThread urlThread;
     OneUrlThread oneThread;
+    RecommendUrlThread recommendThread;
+    OneRecommendThread oneRecommendThread;
 
     private ACache mCache;
 
@@ -140,7 +148,94 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
         }.execute(new Void[] {});
     }
 
-    //public void addCache(News )
+    //to recommend news
+    public void modifyCache(News singleNews)
+    {
+        Log.e("modifyCache", Integer.toString(singleNews.Keywords.size()));
+        String nowFileString = mCache.getAsString("FileOfWordsToRecommend");
+        List<String> wordList = new ArrayList<String>();
+        List<Double> wordScoreList = new ArrayList<Double>();
+        if (nowFileString != null)
+        {
+            mCache.remove("FileOfWordsToRecommend");
+            String[] wordListFile = nowFileString.split(" ");
+            for (int i = 0; i < wordListFile.length; i++)
+            {
+                String currentWord = wordListFile[i];
+                if (!currentWord.equals(""))
+                {
+                    String currentWordScoreString = mCache.getAsString(currentWord);
+                    if (currentWordScoreString != null) {
+                        mCache.remove(currentWord);
+                        wordList.add(currentWord);
+                        wordScoreList.add(Double.valueOf(currentWordScoreString) / 2.0);
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < singleNews.Keywords.size(); i++)
+        {
+            if (i >= 10) break;
+            String currentWord = singleNews.Keywords.get(i);
+            Double currentWordScore = singleNews.Keyword_score.get(i);
+            if (!currentWord.equals(""))
+            {
+                int flag = 0;
+                for (int j = 0; j < wordList.size(); j++)
+                    if (currentWord.equals(wordList.get(j)))
+                    {
+                        wordScoreList.set(j, wordScoreList.get(j) + currentWordScore);
+                        flag = 1;
+                    }
+                if (flag == 0)
+                {
+                    wordList.add(currentWord);
+                    wordScoreList.add(currentWordScore);
+                }
+            }
+        }
+        for (int i = 0; i < wordList.size(); i++)
+            for (int j = 0; j < i; j++)
+                if (wordScoreList.get(j) < wordScoreList.get(j+1)) {
+                    Collections.swap(wordList, j, j+1);
+                    Collections.swap(wordScoreList, j, j+1);
+                }
+        String toCacheString = "";
+        searchKeywords = "";
+        if (wordList.size() > 0) {
+            toCacheString = wordList.get(0);
+            searchKeywords = wordList.get(0);
+        }
+        for (int i = 1; i < wordList.size(); i++){
+            if (i >= 10)    break;
+            if (i < 3)  searchKeywords += wordList.get(i);
+            toCacheString += " " + wordList.get(i);
+            mCache.put(wordList.get(i), Double.toString(wordScoreList.get(i)));
+        }
+        mCache.put("FileOfWordsToRecommend", toCacheString);
+        //Log.e("ToCacheString", toCacheString);
+        searchRecommend();
+    }
+
+    public void searchRecommend(){
+        recommendThread=new RecommendUrlThread();
+        recommendThread.start();
+        try {
+            recommendThread.join();
+            RecommendList = new ArrayList<News>();
+            for (int i = 0; i < analyser.newsList.size(); i++)
+            {
+                newsIdRecommend = analyser.newsList.get(i).news_ID;
+                Log.e("recommend"+i, newsIdRecommend);
+                oneRecommendThread = new OneRecommendThread();
+                oneRecommendThread.start();
+                oneRecommendThread.join();
+                RecommendList.add(recommendAnalyser.news);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 
     public void onItemClick(AdapterView<?> parent, View view, int position,
                             long id) {
@@ -157,6 +252,8 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
             try {
                 oneThread.join();
                 News singleNews = oneAnalyser.news;
+
+                modifyCache(singleNews);
 
                 mCache.put(newsId, oneAnalyser.news.original_String);
 
@@ -188,6 +285,7 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
         else{
             oneAnalyser = new jsonAnalyserOne(tmpString);
             News singleNews = oneAnalyser.news;
+            modifyCache(singleNews);
             Intent intent = new Intent(MainActivity.mactivity, ShowDetails.class);
             intent.putExtra("Headline", singleNews.news_Title);
             String longString = singleNews.news_Content.replaceAll("　", "\n");
@@ -198,6 +296,8 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
                 tmpList[0] = "";
             }
             intent.putExtra("PictureList", tmpList);
+            intent.putExtra("rawJSONstring",singleNews.original_String);
+            intent.putExtra("isUsingLocalPictures", false);
             startActivity(intent);
         }
     }
@@ -212,6 +312,29 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
             Log.i("newsType",Integer.toString(newsType));
             Log.i("json",jsonString);
             analyser = new jsonAnalyserList(jsonString);
+        }
+    }
+
+    class RecommendUrlThread extends Thread {
+        @Override
+        public void run()
+        {
+            SearchNewsAccesser accesser = new SearchNewsAccesser(0, 0, searchKeywords);
+            String jsonString = accesser.stringBuilder.toString();
+            Log.i("pageNo", Integer.toString(pageNo));
+            Log.i("newsType",Integer.toString(newsType));
+            Log.i("json",jsonString);
+            analyser = new jsonAnalyserList(jsonString);
+        }
+    }
+
+    class OneRecommendThread extends Thread {
+        @Override
+        public void run()
+        {
+            OneNewsAccesser oneAccesser = new OneNewsAccesser(newsIdRecommend);
+            String jsonOneString = oneAccesser.stringBuilder.toString();
+            recommendAnalyser = new jsonAnalyserOne(jsonOneString);
         }
     }
 
