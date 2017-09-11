@@ -2,6 +2,7 @@ package com.java.group37.newsapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
@@ -15,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.SimpleAdapter;
 
 import com.roughike.bottombar.BottomBar;
+import com.roughike.bottombar.OnTabSelectListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -83,6 +85,19 @@ public class RecentActivity extends AppCompatActivity
 
         BottomBar bottomBar = (BottomBar) findViewById(R.id.bottomBar);
         bottomBar.selectTabWithId(R.id.tab_recents);
+        bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
+            @Override
+            public void onTabSelected(@IdRes int tabId) {
+                if (tabId == R.id.tab_favorites) {
+                    Intent intent = new Intent(RecentActivity.this, SeeFavorited.class);
+                    startActivity(intent);
+                }
+                if (tabId == R.id.tab_friends) {
+                    Intent intent = new Intent(RecentActivity.this, MainActivity.class);
+                    startActivity(intent);
+                }
+            }
+        });
 
     }
     @Override
