@@ -52,58 +52,6 @@ public class SeeFavorited extends AppCompatActivity {
                 finish();
             }
         });
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-
-        String[] fl = fileList();
-        for (String name : fileList()){
-            if (name.startsWith("FavoritedNews_")){
-                try{
-                    FileInputStream fis = openFileInput(name);
-                    BufferedReader br = new BufferedReader(new InputStreamReader(fis));
-                    String rawJSONString = br.readLine();
-                    int picNum = Integer.parseInt(br.readLine());
-                    if (picNum == 0){
-                        News n = new News(rawJSONString,new String[0]);
-                    }
-                    else{
-                        String[] picURLs = new String[picNum];
-                        Log.println(Log.ERROR,"error",name);
-                        Log.println(Log.ERROR,"error",String.valueOf(picNum));
-                        for (int i=0;i<picNum;i++){
-                            picURLs[i] = "pic"+String.valueOf(i)+"_"+name;
-                        }
-                        News n = new News(rawJSONString,picURLs);
-                        NewsList.add(n);
-                    }
-                } catch (Exception e){
-                    e.printStackTrace();
-                }
-
-            }
-        }
-        list = (RefreshListView) findViewById (R.id.Nlistview);
-        newsAdapter = new news_adapter(this,NewsList);
-        list.setAdapter(newsAdapter);
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                //Log.e("aa","click "+ i + " " + l);
-                News singleNews = NewsList.get(i-1);
-                Intent intent = new Intent(SeeFavorited.this, ShowDetails.class);
-                intent.putExtra("Headline", singleNews.news_Title);
-                String longString = singleNews.news_Content.replaceAll("　", "\n");
-                intent.putExtra("Details", longString);
-                String[] tmpList = singleNews.news_Pictures.split("[ ;]");
-                if(tmpList.length == 0) {
-                    tmpList = new String[1];
-                    tmpList[0] = "";
-                }
-                intent.putExtra("PictureList", tmpList);
-                intent.putExtra("rawJSONstring",singleNews.original_String);
-                intent.putExtra("isUsingLocalPictures",true);
-                startActivity(intent);
-            }
-        });
     }
 
     @Override
@@ -123,7 +71,7 @@ public class SeeFavorited extends AppCompatActivity {
                     int picNum = Integer.parseInt(br.readLine());
                     String[] picURLs = new String[picNum];
                     for (int i=0;i<picNum;i++){
-                        picURLs[i] = "pic"+String.valueOf(i)+"_"+name;
+                        picURLs[i] = getFilesDir()+"/pic"+String.valueOf(i)+"_"+name+".png";
                     }
                     News n = new News(rawJSONString,picURLs);
                     NewsList.add(n);
@@ -145,11 +93,16 @@ public class SeeFavorited extends AppCompatActivity {
                 intent.putExtra("Headline", singleNews.news_Title);
                 String longString = singleNews.news_Content.replaceAll("　", "\n");
                 intent.putExtra("Details", longString);
-                String[] tmpList = singleNews.news_Pictures.split("[ ;]");
+                String[] tmpList;
+                if (singleNews.isUsingLocalPictures == true)
+                    tmpList = singleNews.LocalPictures.split("[ ;]");
+                else
+                    tmpList = singleNews.news_Pictures.split("[ ;]");
                 if(tmpList.length == 0) {
                     tmpList = new String[1];
                     tmpList[0] = "";
                 }
+                Log.e("picerr", tmpList[0]);
                 intent.putExtra("PictureList", tmpList);
                 intent.putExtra("rawJSONstring",singleNews.original_String);
                 intent.putExtra("isUsingLocalPictures",true);

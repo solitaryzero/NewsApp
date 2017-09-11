@@ -225,6 +225,7 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
             RecommendList = new ArrayList<News>();
             for (int i = 0; i < analyser.newsList.size(); i++)
             {
+                if (i >= 3) break;
                 newsIdRecommend = analyser.newsList.get(i).news_ID;
                 //Log.e("recommend"+i, newsIdRecommend);
                 oneRecommendThread = new OneRecommendThread();
@@ -271,11 +272,13 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
                 intent.putExtra("Headline", singleNews.news_Title);
                 String longString = singleNews.news_Content.replaceAll("　", "\n");
                 intent.putExtra("Details", longString);
-                String[] tmpList = singleNews.news_Pictures.split("[ ;]");
+                String[] tmpList;
+                tmpList = singleNews.news_Pictures.split("[ ;]");
                 if(tmpList.length == 0) {
                     tmpList = new String[1];
                     tmpList[0] = "";
                 }
+
                 intent.putExtra("PictureList", tmpList);
                 intent.putExtra("rawJSONstring",singleNews.original_String);
                 //Log.e("original", singleNews.original_String);

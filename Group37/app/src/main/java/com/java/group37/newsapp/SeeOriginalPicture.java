@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 
+import java.io.File;
+
 public class SeeOriginalPicture extends AppCompatActivity {
 
     @Override
@@ -28,7 +30,13 @@ public class SeeOriginalPicture extends AppCompatActivity {
 
         ImageView img = (ImageView) findViewById(R.id.Image);
         String url = getIntent().getStringExtra("URL");
-        Glide.with(this).load(url).dontAnimate().into(img);
+        boolean isUsingLocalPictures = getIntent().getBooleanExtra("isUsingLocalPictures",false);
+        if (isUsingLocalPictures){
+            File f = new File(url);
+            Glide.with(this).load(f).placeholder(R.drawable.loading).error(R.drawable.not_found).dontAnimate().into(img);
+        } else {
+            Glide.with(this).load(url).placeholder(R.drawable.loading).error(R.drawable.not_found).dontAnimate().into(img);
+        }
     }
 
 }
