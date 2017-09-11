@@ -40,6 +40,13 @@ public class RecentActivity extends AppCompatActivity
         toolbar.setTitle("SkyNews");
         toolbar.setSubtitle("Recent News");
         setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_action_back);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         mCache = ACache.get(MainActivity.mactivity);

@@ -48,7 +48,8 @@
             android:layout_width="match_parent"
             android:layout_height="406dp"
             android:layout_above="@+id/bottomBar"
-            android:layout_weight="1.13">
+            android:layout_weight="1.13"
+            android:background="@color/color_white">
         </com.java.group37.newsapp.RefreshListView>
 
         <com.roughike.bottombar.BottomBar
@@ -56,7 +57,9 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_alignParentBottom="true"
-            app:bb_tabXmlResource="@xml/bottombar_tabs">
+            app:bb_tabXmlResource="@xml/bottombar_tabs"
+            android:background="@color/color_white"
+            app:bb_inActiveTabColor="@color/color_bottom">
 
         </com.roughike.bottombar.BottomBar>
 
