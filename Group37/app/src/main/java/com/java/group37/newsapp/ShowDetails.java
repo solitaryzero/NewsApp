@@ -31,39 +31,23 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.MessageDigest;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.Target;
 
 public class ShowDetails extends AppCompatActivity {
 
     private TextToSpeech tts = null;
-
-    /*
-    public Bitmap getImageBitmap(String url) {
-        URL imgUrl = null;
-        Bitmap bitmap = null;
-        try {
-            imgUrl = new URL(url);
-            HttpURLConnection conn = (HttpURLConnection) imgUrl
-                    .openConnection();
-            conn.setDoInput(true);
-            conn.connect();
-            InputStream is = conn.getInputStream();
-            bitmap = BitmapFactory.decodeStream(is);
-            is.close();
-        } catch (MalformedURLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return bitmap;
-    }
-    */
+    private String rawJSONString;
+    private int picNum = 0;
+    private boolean isUsingLocalPics;
+    private List<Bitmap> bitmaps = new ArrayList<Bitmap>();
 
     private int getPixelsFromDp(int size){
 
@@ -78,6 +62,11 @@ public class ShowDetails extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        rawJSONString = getIntent().getStringExtra("rawJSONstring");
+        Log.println(Log.ERROR,"json",rawJSONString);
+        isUsingLocalPics = getIntent().getBooleanExtra("isUsingLocalPictures",false);
+
         //设置标题栏
         setContentView(R.layout.activity_show_details);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -100,12 +89,43 @@ public class ShowDetails extends AppCompatActivity {
             for (int i=0;i<pictureURLs.length;i++){
                 String url = pictureURLs[i];
                 if (i==0){
-                    Glide.with(this).load(url).dontAnimate().into(headerPicture);
+                    if (isUsingLocalPics){
+                        File f = new File(url);
+                        Glide.with(this).load(f).placeholder(R.drawable.loading).error(R.drawable.not_found).dontAnimate().into(headerPicture);
+                    }
+                    Glide.with(this).load(url).placeholder(R.drawable.loading).error(R.drawable.not_found).dontAnimate().into(headerPicture);
                 }
                 ImageView iv = new ImageView(this);
                 iv.setLayoutParams(new Toolbar.LayoutParams(getPixelsFromDp(150),getPixelsFromDp(100)));
                 iv.setScaleType(ImageView.ScaleType.FIT_XY);
-                Glide.with(this).load(url).dontAnimate().into(iv);
+                if (isUsingLocalPics){
+                    File f = new File(url);
+                    Glide.with(this).load(f).placeholder(R.drawable.loading).error(R.drawable.not_found).dontAnimate().into(iv);
+                    try {
+                        Bitmap bm = Glide.with(this)
+                                .load(f)
+                                .asBitmap()
+                                .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                                .get();
+                        bitmaps.add(bm);
+                        Log.println(Log.ERROR,"number",String.valueOf(bitmaps.size()));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                else {
+                    Glide.with(this).load(url).placeholder(R.drawable.loading).error(R.drawable.not_found).dontAnimate().into(iv);
+                    try {
+                        Bitmap bm = Glide.with(this)
+                                .load(url)
+                                .asBitmap()
+                                .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                                .get();
+                        bitmaps.add(bm);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
                 iv.setTag(pictureURLs[i]);
                 iv.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -122,6 +142,7 @@ public class ShowDetails extends AppCompatActivity {
             headerPicture.setVisibility(View.GONE);
             pictureScroll.setVisibility(View.GONE);
         }
+        picNum = bitmaps.size();
 
         //设置标题与正文
         Intent intent = getIntent();
@@ -215,16 +236,28 @@ public class ShowDetails extends AppCompatActivity {
                 if (Arrays.asList(fileList()).contains(fileName)){
                     //Toast.makeText(this,"Already favorited",Toast.LENGTH_LONG).show();
                     deleteFile(fileName);
+                    for (int i=0;i<picNum;i++){
+                        deleteFile("pic"+String.valueOf(i)+"_"+fileName);
+                    }
                     item.setIcon(R.drawable.ic_empty_star);
                 } else {
                     fileOutputStream = openFileOutput(fileName,
                             Context.MODE_PRIVATE);
                     bufferedWriter = new BufferedWriter(
                             new OutputStreamWriter(fileOutputStream));
+                    bufferedWriter.write(rawJSONString + "\n");
+                    bufferedWriter.write(String.valueOf(picNum) + "\n");
                     bufferedWriter.write(headline.getText().toString() + "\n");
                     String s = getIntent().getStringExtra("Details");
                     bufferedWriter.write(s);
                     bufferedWriter.close();
+                    for (int i=0;i<picNum;i++){
+                        fileOutputStream = openFileOutput("pic"+String.valueOf(i)+"_"+fileName,
+                                Context.MODE_PRIVATE);
+                        bitmaps.get(i).compress(Bitmap.CompressFormat.PNG, 90, fileOutputStream);
+                        fileOutputStream.flush();
+                        fileOutputStream.close();
+                    }
                     item.setIcon(R.drawable.ic_full_star);
                 }
             } catch (IOException e) {

@@ -278,6 +278,7 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
                 }
                 intent.putExtra("PictureList", tmpList);
                 intent.putExtra("rawJSONstring",singleNews.original_String);
+                //Log.e("original", singleNews.original_String);
                 intent.putExtra("isUsingLocalPictures", false);
                 startActivity(intent);
             } catch (InterruptedException e) {
@@ -299,6 +300,7 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
             }
             intent.putExtra("PictureList", tmpList);
             intent.putExtra("rawJSONstring",singleNews.original_String);
+            //Log.e("original", singleNews.original_String);
             intent.putExtra("isUsingLocalPictures", false);
             startActivity(intent);
         }

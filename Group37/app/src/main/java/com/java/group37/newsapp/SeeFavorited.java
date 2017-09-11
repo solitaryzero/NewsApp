@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -31,12 +32,18 @@ import java.util.Map;
 
 public class SeeFavorited extends AppCompatActivity {
 
+    private ACache mCache;
+    private List<News> NewsList = new ArrayList<News>();
+    RefreshListView list;
+    private news_adapter newsAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_see_favorited);
+        setContentView(R.layout.recent);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Favorited");
+        toolbar.setTitle("SkyNews");
+        toolbar.setSubtitle("Favorited News");
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_action_back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -45,52 +52,55 @@ public class SeeFavorited extends AppCompatActivity {
                 finish();
             }
         });
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        String[] list = fileList();
-        ListView fav = (ListView) findViewById(R.id.FavList);
-        List<Map<String,Object>> data = new ArrayList<Map<String, Object>>();
-        for (String name : list){
-            //Log.println(Log.INFO,"",name);
-            if (name.contains("FavoritedNews_")){
+        String[] fl = fileList();
+        for (String name : fileList()){
+            if (name.startsWith("FavoritedNews_")){
                 try{
                     FileInputStream fis = openFileInput(name);
                     BufferedReader br = new BufferedReader(new InputStreamReader(fis));
-                    Map<String,Object> m = new HashMap<String,Object>();
-                    String title = br.readLine();
-                    String details = "";
-                    String s;
-                    while ((s = br.readLine()) != null){
-                        details += s+'\n';
+                    String rawJSONString = br.readLine();
+                    int picNum = Integer.parseInt(br.readLine());
+                    if (picNum == 0){
+                        News n = new News(rawJSONString,new String[0]);
                     }
-                    m.put("title",title);
-                    m.put("details",details);
-                    data.add(m);
+                    else{
+                        String[] picURLs = new String[picNum];
+                        Log.println(Log.ERROR,"error",name);
+                        Log.println(Log.ERROR,"error",String.valueOf(picNum));
+                        for (int i=0;i<picNum;i++){
+                            picURLs[i] = "pic"+String.valueOf(i)+"_"+name;
+                        }
+                        News n = new News(rawJSONString,picURLs);
+                        NewsList.add(n);
+                    }
                 } catch (Exception e){
                     e.printStackTrace();
                 }
 
             }
         }
-
-        SimpleAdapter adapter = new SimpleAdapter(this,data,R.layout.favlistlayout,
-                new String[]{"title","details"},
-                new int[]{R.id.title,R.id.details});
-        fav.setAdapter(adapter);
-
-        fav.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        list = (RefreshListView) findViewById (R.id.Nlistview);
+        newsAdapter = new news_adapter(this,NewsList);
+        list.setAdapter(newsAdapter);
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                if (l == -1){
-                    return;
+                //Log.e("aa","click "+ i + " " + l);
+                News singleNews = NewsList.get(i-1);
+                Intent intent = new Intent(SeeFavorited.this, ShowDetails.class);
+                intent.putExtra("Headline", singleNews.news_Title);
+                String longString = singleNews.news_Content.replaceAll("　", "\n");
+                intent.putExtra("Details", longString);
+                String[] tmpList = singleNews.news_Pictures.split("[ ;]");
+                if(tmpList.length == 0) {
+                    tmpList = new String[1];
+                    tmpList[0] = "";
                 }
-                int realPosition = (int)l;
-                Intent intent = new Intent(SeeFavorited.this,ShowDetails.class);
-                HashMap<String,Object> hm = (HashMap<String,Object>) adapterView.getItemAtPosition(realPosition);
-                intent.putExtra("Headline",hm.get("title").toString());
-                intent.putExtra("Details",hm.get("details").toString());
-                String[] s = new String[1];
-                s[0] = "";
-                intent.putExtra("PictureList",s);
+                intent.putExtra("PictureList", tmpList);
+                intent.putExtra("rawJSONstring",singleNews.original_String);
+                intent.putExtra("isUsingLocalPictures",true);
                 startActivity(intent);
             }
         });
@@ -100,51 +110,49 @@ public class SeeFavorited extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        String[] list = fileList();
-        ListView fav = (ListView) findViewById(R.id.FavList);
-        List<Map<String,Object>> data = new ArrayList<Map<String, Object>>();
-        for (String name : list){
-            //Log.println(Log.INFO,"",name);
-            if (name.contains("FavoritedNews_")){
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        NewsList.clear();
+        String[] fl = fileList();
+        for (String name : fileList()){
+            if (name.startsWith("FavoritedNews_")){
                 try{
                     FileInputStream fis = openFileInput(name);
                     BufferedReader br = new BufferedReader(new InputStreamReader(fis));
-                    Map<String,Object> m = new HashMap<String,Object>();
-                    String title = br.readLine();
-                    String details = "";
-                    String s;
-                    while ((s = br.readLine()) != null){
-                        details += s+'\n';
+                    String rawJSONString = br.readLine();
+                    int picNum = Integer.parseInt(br.readLine());
+                    String[] picURLs = new String[picNum];
+                    for (int i=0;i<picNum;i++){
+                        picURLs[i] = "pic"+String.valueOf(i)+"_"+name;
                     }
-                    m.put("title",title);
-                    m.put("details",details);
-                    data.add(m);
+                    News n = new News(rawJSONString,picURLs);
+                    NewsList.add(n);
                 } catch (Exception e){
                     e.printStackTrace();
                 }
 
             }
         }
-
-        SimpleAdapter adapter = new SimpleAdapter(this,data,R.layout.favlistlayout,
-                new String[]{"title","details"},
-                new int[]{R.id.title,R.id.details});
-        fav.setAdapter(adapter);
-
-        fav.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        list = (RefreshListView) findViewById (R.id.Nlistview);
+        newsAdapter = new news_adapter(this,NewsList);
+        list.setAdapter(newsAdapter);
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                if (l == -1){
-                    return;
+                //Log.e("aa","click "+ i + " " + l);
+                News singleNews = NewsList.get(i-1);
+                Intent intent = new Intent(SeeFavorited.this, ShowDetails.class);
+                intent.putExtra("Headline", singleNews.news_Title);
+                String longString = singleNews.news_Content.replaceAll("　", "\n");
+                intent.putExtra("Details", longString);
+                String[] tmpList = singleNews.news_Pictures.split("[ ;]");
+                if(tmpList.length == 0) {
+                    tmpList = new String[1];
+                    tmpList[0] = "";
                 }
-                int realPosition = (int)l;
-                Intent intent = new Intent(SeeFavorited.this,ShowDetails.class);
-                HashMap<String,Object> hm = (HashMap<String,Object>) adapterView.getItemAtPosition(realPosition);
-                intent.putExtra("Headline",hm.get("title").toString());
-                intent.putExtra("Details",hm.get("details").toString());
-                String[] s = new String[1];
-                s[0] = "";
-                intent.putExtra("PictureList",s);
+                intent.putExtra("PictureList", tmpList);
+                intent.putExtra("rawJSONstring",singleNews.original_String);
+                intent.putExtra("isUsingLocalPictures",true);
                 startActivity(intent);
             }
         });

@@ -22,6 +22,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -48,7 +49,7 @@ import java.util.List;
 import cn.bingoogolapple.refreshlayout.BGARefreshLayout;
 
 public class MainActivity extends BaseActivity
-        implements  BGARefreshLayout.BGARefreshLayoutDelegate,NavigationView.OnNavigationItemSelectedListener ,ChannelDataHelepr.ChannelDataRefreshListenter{
+        implements  BGARefreshLayout.BGARefreshLayoutDelegate,NavigationView.OnNavigationItemSelectedListener {
     private BGARefreshLayout mBGARefreshLayout;
     public static MainActivity mactivity;
     public static Context mainContext;
@@ -77,9 +78,9 @@ public class MainActivity extends BaseActivity
     private TabAdapter mAdapter ;
     private BottomNavigationView butttom;
     View switch_view;
-    TitleFragmentAdapter adapter;
-    List<MyChannel> myChannels;
-    ChannelDataHelepr<MyChannel> dataHelepr;
+    //TitleFragmentAdapter adapter;
+    //List<MyChannel> myChannels;
+    //ChannelDataHelepr<MyChannel> dataHelepr;
     private int needShowPosition=-1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,11 +99,18 @@ public class MainActivity extends BaseActivity
         mIndicator.setViewPager(mViewPager);
 
         switch_view = findViewById(R.id.iv_subscibe);
-        dataHelepr = new ChannelDataHelepr(this, (ChannelDataHelepr.ChannelDataRefreshListenter) this, findViewById(R.id.top_bar));
-        dataHelepr.setSwitchView(switch_view);
-        myChannels = new ArrayList<>();
-        adapter = new TitleFragmentAdapter(getSupportFragmentManager(), myChannels);
-        loadData();
+        switch_view.setOnClickListener(new AdapterView.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, ChannelActivity.class);
+                startActivity(intent);
+            }
+        });
+        //dataHelepr = new ChannelDataHelepr(this, (ChannelDataHelepr.ChannelDataRefreshListenter) this, findViewById(R.id.top_bar));
+        //dataHelepr.setSwitchView(switch_view);
+        //myChannels = new ArrayList<>();
+        //adapter = new TitleFragmentAdapter(getSupportFragmentManager(), myChannels);
+        //loadData();
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -144,7 +152,7 @@ public class MainActivity extends BaseActivity
         bottomBar.selectTabWithId(R.id.tab_friends);
     }
 
-    @Override
+    /*@Override
     public void updateData() {
         loadData();
     }
@@ -202,7 +210,7 @@ public class MainActivity extends BaseActivity
             e.printStackTrace();
         }
         return result;
-    }
+    }*/
     /*public void setSupportActionBar(Toolbar supportActionBar) {
         this.supportActionBar = supportActionBar;
     }*/
@@ -309,7 +317,7 @@ public class MainActivity extends BaseActivity
         return true;
     }
     /** 进入页面首次加载数据 */
-   // @Override
+    // @Override
     /*protected void onStart() {
         super.onStart();
         mBGARefreshLayout.beginRefreshing();

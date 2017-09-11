@@ -139,6 +139,8 @@ public class News {
 
         if (local_pictures.length > 0)
             this.LocalPictures = local_pictures[0];
+        else
+            this.LocalPictures = "";
         for (int i = 1; i < local_pictures.length; i++) {
             this.LocalPictures += " " + local_pictures[i];
         }
