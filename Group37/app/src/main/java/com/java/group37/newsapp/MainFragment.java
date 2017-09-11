@@ -226,7 +226,7 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
             for (int i = 0; i < analyser.newsList.size(); i++)
             {
                 newsIdRecommend = analyser.newsList.get(i).news_ID;
-                Log.e("recommend"+i, newsIdRecommend);
+                //Log.e("recommend"+i, newsIdRecommend);
                 oneRecommendThread = new OneRecommendThread();
                 oneRecommendThread.start();
                 oneRecommendThread.join();
@@ -277,6 +277,8 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
                     tmpList[0] = "";
                 }
                 intent.putExtra("PictureList", tmpList);
+                intent.putExtra("rawJSONstring",singleNews.original_String);
+                intent.putExtra("isUsingLocalPictures", false);
                 startActivity(intent);
             } catch (InterruptedException e) {
                 e.printStackTrace();
