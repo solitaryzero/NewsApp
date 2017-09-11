@@ -70,9 +70,9 @@ public class news_adapter extends BaseAdapter {
             tmpPictures = newsItem.LocalPictures.split("[ ;]");
             holder.mImg.setVisibility(View.VISIBLE);
             String tmpPicture = tmpPictures[0];
-            File file = new File(Environment.getExternalStorageDirectory(), tmpPicture);
+            File file = new File(tmpPicture);
             //加载图片
-            Glide.with(MainActivity.mactivity).load(file).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.drawable.loading).error(R.drawable.not_found).dontAnimate().into(holder.mImg);
+            Glide.with(MainActivity.mactivity).load(file).placeholder(R.drawable.loading).error(R.drawable.not_found).dontAnimate().into(holder.mImg);
         }
         else if(!newsItem.news_Pictures.equals("")&&tmpPictures.length != 0){
             holder.mImg.setVisibility(View.VISIBLE);
