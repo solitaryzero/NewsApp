@@ -39,7 +39,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.bumptech.glide.request.target.Target;
+
+import static android.os.Environment.getExternalStorageDirectory;
 
 public class ShowDetails extends AppCompatActivity {
 
@@ -93,45 +97,48 @@ public class ShowDetails extends AppCompatActivity {
                         File f = new File(url);
                         Glide.with(this).load(f).placeholder(R.drawable.loading).error(R.drawable.not_found).dontAnimate().into(headerPicture);
                     }
-                    Glide.with(this).load(url).placeholder(R.drawable.loading).error(R.drawable.not_found).dontAnimate().into(headerPicture);
+                    else{
+                        Glide.with(this).load(url).placeholder(R.drawable.loading).error(R.drawable.not_found).dontAnimate().into(headerPicture);
+                    }
                 }
                 ImageView iv = new ImageView(this);
                 iv.setLayoutParams(new Toolbar.LayoutParams(getPixelsFromDp(150),getPixelsFromDp(100)));
                 iv.setScaleType(ImageView.ScaleType.FIT_XY);
                 if (isUsingLocalPics){
                     File f = new File(url);
-                    Glide.with(this).load(f).placeholder(R.drawable.loading).error(R.drawable.not_found).dontAnimate().into(iv);
-                    try {
-                        Bitmap bm = Glide.with(this)
-                                .load(f)
-                                .asBitmap()
-                                .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
-                                .get();
-                        bitmaps.add(bm);
-                        Log.println(Log.ERROR,"number",String.valueOf(bitmaps.size()));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    Glide.with(this)
+                            .load(f)
+                            .asBitmap()
+                            .into(new BitmapImageViewTarget(iv) {
+                                @Override
+                                public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
+                                    super.onResourceReady(bitmap, anim);
+                                    bitmaps.add(bitmap);
+                                    picNum++;
+                                }
+                            });
                 }
                 else {
-                    Glide.with(this).load(url).placeholder(R.drawable.loading).error(R.drawable.not_found).dontAnimate().into(iv);
-                    try {
-                        Bitmap bm = Glide.with(this)
-                                .load(url)
-                                .asBitmap()
-                                .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
-                                .get();
-                        bitmaps.add(bm);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    Glide.with(this)
+                            .load(url)
+                            .asBitmap()
+                            .into(new BitmapImageViewTarget(iv) {
+                                @Override
+                                public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
+                                    super.onResourceReady(bitmap, anim);
+                                    bitmaps.add(bitmap);
+                                    picNum++;
+                                }
+                            });
                 }
+
                 iv.setTag(pictureURLs[i]);
                 iv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Intent intent = new Intent(ShowDetails.this,SeeOriginalPicture.class);
                         intent.putExtra("URL",view.getTag().toString());
+                        intent.putExtra("isUsingLocalPictures",isUsingLocalPics);
                         startActivity(intent);
                     }
                 });
@@ -142,7 +149,6 @@ public class ShowDetails extends AppCompatActivity {
             headerPicture.setVisibility(View.GONE);
             pictureScroll.setVisibility(View.GONE);
         }
-        picNum = bitmaps.size();
 
         //设置标题与正文
         Intent intent = getIntent();
@@ -237,7 +243,7 @@ public class ShowDetails extends AppCompatActivity {
                     //Toast.makeText(this,"Already favorited",Toast.LENGTH_LONG).show();
                     deleteFile(fileName);
                     for (int i=0;i<picNum;i++){
-                        deleteFile("pic"+String.valueOf(i)+"_"+fileName);
+                        deleteFile("pic"+String.valueOf(i)+"_"+fileName+".png");
                     }
                     item.setIcon(R.drawable.ic_empty_star);
                 } else {
@@ -252,13 +258,21 @@ public class ShowDetails extends AppCompatActivity {
                     bufferedWriter.write(s);
                     bufferedWriter.close();
                     for (int i=0;i<picNum;i++){
-                        fileOutputStream = openFileOutput("pic"+String.valueOf(i)+"_"+fileName,
+                        fileOutputStream = openFileOutput("pic"+String.valueOf(i)+"_"+fileName+".png",
                                 Context.MODE_PRIVATE);
                         bitmaps.get(i).compress(Bitmap.CompressFormat.PNG, 90, fileOutputStream);
                         fileOutputStream.flush();
                         fileOutputStream.close();
                     }
                     item.setIcon(R.drawable.ic_full_star);
+                    String[] fl = fileList();
+                    int count = 0;
+                    for (String name : fl){
+                        if (name.contains(fileName)) {
+                            count++;
+                            Log.e("picsave",name);
+                        }
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
