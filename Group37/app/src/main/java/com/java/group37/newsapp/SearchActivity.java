@@ -32,6 +32,15 @@ public class SearchActivity extends AppCompatActivity
     private List<News> NewsList = new ArrayList<News>();
     RefreshListView list;
     private news_adapter newsAdapter;
+    jsonAnalyserList analyser;
+    jsonAnalyserOne oneAnalyser;
+    String newsIdSearch;
+    String searchKeywords;
+    int pageNo;
+
+    SearchThread searchThread;
+    OneSearchThread oneSearchThread;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,15 +57,97 @@ public class SearchActivity extends AppCompatActivity
                 finish();
             }
         });
+        mCache = ACache.get(MainActivity.mactivity);
         list = (RefreshListView) findViewById (R.id.Nlistview);
+        Intent intent = getIntent();
+        searchKeywords = intent.getStringExtra("Keywords");
+
+        pageNo = 0;
+
+        searchThread=new SearchThread();
+        searchThread.start();
+        try {
+            searchThread.join();
+            NewsList = new ArrayList<News>();
+            for (int i = 0; i < analyser.newsList.size(); i++)
+            {
+                NewsList.add(analyser.newsList.get(i));
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         newsAdapter = new news_adapter(this,NewsList);
         list.setAdapter(newsAdapter);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Log.e("aa","click "+ i + " " + l);
+                newsIdSearch = NewsList.get(i-1).news_ID;
+
+                String tmpString = mCache.getAsString(newsIdSearch);
+                //String tmpString = null;
+                if (tmpString == null) {
+                    oneSearchThread = new OneSearchThread();
+                    oneSearchThread.start();
+                    try {
+                        oneSearchThread.join();
+                        News singleNews = oneAnalyser.news;
+
+                        mCache.put(newsIdSearch, oneAnalyser.news.original_String);
+
+                        String nowFileString = mCache.getAsString("FileToSaveNews");
+                        if (nowFileString == null)
+                            nowFileString = newsIdSearch;
+                        else
+                        {
+                            mCache.remove("FileToSaveNews");
+                            nowFileString += " " + newsIdSearch;
+                        }
+                        mCache.put("FileToSaveNews",nowFileString);
+
+                        Intent intent = new Intent(MainActivity.mactivity, ShowDetails.class);
+                        intent.putExtra("Headline", singleNews.news_Title);
+                        String longString = singleNews.news_Content.replaceAll("　", "\n");
+                        intent.putExtra("Details", longString);
+                        String[] tmpList;
+                        tmpList = singleNews.news_Pictures.split("[ ;]");
+                        if(tmpList.length == 0) {
+                            tmpList = new String[1];
+                            tmpList[0] = "";
+                        }
+
+                        intent.putExtra("PictureList", tmpList);
+                        intent.putExtra("rawJSONstring",singleNews.original_String);
+                        //Log.e("original", singleNews.original_String);
+                        intent.putExtra("isUsingLocalPictures", false);
+                        startActivity(intent);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                else{
+                    oneAnalyser = new jsonAnalyserOne(tmpString);
+                    News singleNews = oneAnalyser.news;
+                    Intent intent = new Intent(MainActivity.mactivity, ShowDetails.class);
+                    intent.putExtra("Headline", singleNews.news_Title);
+                    String longString = singleNews.news_Content.replaceAll("　", "\n");
+                    intent.putExtra("Details", longString);
+                    String[] tmpList = singleNews.news_Pictures.split("[ ;]");
+                    if(tmpList.length == 0) {
+                        tmpList = new String[1];
+                        tmpList[0] = "";
+                    }
+                    intent.putExtra("PictureList", tmpList);
+                    intent.putExtra("rawJSONstring",singleNews.original_String);
+                    //Log.e("original", singleNews.original_String);
+                    intent.putExtra("isUsingLocalPictures", false);
+                    startActivity(intent);
+                }
             }
         });
+
+
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -85,5 +176,25 @@ public class SearchActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+    class SearchThread extends Thread {
+        @Override
+        public void run()
+        {
+            SearchNewsAccesser accesser = new SearchNewsAccesser(0, 0, searchKeywords);
+            String jsonString = accesser.stringBuilder.toString();
+            Log.i("pageNo", Integer.toString(pageNo));
+            Log.i("json",jsonString);
+            analyser = new jsonAnalyserList(jsonString);
+        }
+    }
+    class OneSearchThread extends Thread {
+        @Override
+        public void run()
+        {
+            OneNewsAccesser oneAccesser = new OneNewsAccesser(newsIdSearch);
+            String jsonOneString = oneAccesser.stringBuilder.toString();
+            oneAnalyser = new jsonAnalyserOne(jsonOneString);
+        }
     }
 }

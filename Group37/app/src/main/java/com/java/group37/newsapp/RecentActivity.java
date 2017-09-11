@@ -75,6 +75,8 @@ public class RecentActivity extends AppCompatActivity
                     tmpList[0] = "";
                 }
                 intent.putExtra("PictureList", tmpList);
+                intent.putExtra("rawJSONstring",singleNews.original_String);
+                intent.putExtra("isUsingLocalPictures", false);
                 startActivity(intent);
             }
         });

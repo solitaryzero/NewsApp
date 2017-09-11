@@ -4,8 +4,10 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
+import android.content.Intent;
 
 import com.zhl.channeltagview.bean.ChannelItem;
 import com.zhl.channeltagview.bean.GroupItem;
@@ -24,11 +26,12 @@ public class ChannelActivity extends AppCompatActivity {
     private ArrayList<ChannelItem> addedChannels = new ArrayList<>();
     private ArrayList<ChannelItem> unAddedChannels = new ArrayList<>();
     private ArrayList<GroupItem> unAddedItems = new ArrayList<>();
-
+    private ACache mCache;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.channel_manager);
+        mCache = ACache.get(MainActivity.mactivity);
         channelTagView = (ChannelTagView) findViewById(R.id.channel_tag_view);
         initData();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);//最顶栏
@@ -38,6 +41,18 @@ public class ChannelActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String added = "";
+                if (addedChannels.size() > 0)
+                    added = addedChannels.get(0).title;
+                for (int i = 1; i < addedChannels.size(); i++)
+                    added += " " + addedChannels.get(i).title;
+                Intent intent = new Intent();
+                intent.putExtra("result", added);
+                //Log.e("AddedChannels", added);
+                /*
+                 * 调用setResult方法表示我将Intent对象返回给之前的那个Activity，这样就可以在onActivityResult方法中得到Intent对象，
+                 */
+                setResult(2468, intent);
                 finish();
             }
         });
@@ -140,25 +155,63 @@ public class ChannelActivity extends AppCompatActivity {
 
     private void initData() {
         //String[] chanles = getResources().getStringArray(R.array.chanles);
+        String tmpTitles = mCache.getAsString("TitlesSavedInCache");
         String[] chanles = new String[]{"全部","科技","教育","军事","国内","社会","文化","汽车","国际","体育","财经","健康","娱乐"};
-        for (int i = 0; i < 10; i++) {
-            ChannelItem item = new ChannelItem();
-            item.id = i;
-            item.title = chanles[i];
-            item.category = "";
-            addedChannels.add(item);
+        if (tmpTitles == null)
+        {
+            for (int i = 0; i < chanles.length; i++)
+            {
+                ChannelItem item = new ChannelItem();
+                item.id = i;
+                item.title = chanles[i];
+                item.category = "";
+                addedChannels.add(item);
+            }
+            tmpTitles = chanles[0];
+            for (int i = 1; i < chanles.length; i++)
+                tmpTitles += " " + chanles[i];
+            mCache.put("TitlesSavedInCache",tmpTitles);
+
+            GroupItem groupFinance = new GroupItem();
+            groupFinance.category = "其它";
+            unAddedItems.add(groupFinance);
         }
-        GroupItem groupFinance = new GroupItem();
-        groupFinance.category = "其它";
-        for (int i = 10; i < 13; i++) {
-            ChannelItem item = new ChannelItem();
-            item.id = i;
-            item.title = chanles[i];
-            item.category = "其它";
-            unAddedChannels.add(item);
-            groupFinance.addChanelItem(item);
+        else
+        {
+            String listTitles[] = tmpTitles.split(" ");
+            for (int i = 0; i < listTitles.length; i++)
+            {
+                ChannelItem item = new ChannelItem();
+                item.id = i;
+                item.title = listTitles[i];
+                item.category = "";
+                addedChannels.add(item);
+            }
+            GroupItem groupFinance = new GroupItem();
+            groupFinance.category = "其它";
+
+            for (int i = 0; i < chanles.length; i++)
+            {
+                int flag = 0;
+                for (int j = 0; j < listTitles.length; j++)
+                    if (chanles[i].equals(listTitles[j]))
+                    {
+                        flag = 1;
+                        break;
+                    }
+                if (flag == 0)
+                {
+                    ChannelItem item = new ChannelItem();
+                    item.id = i;
+                    item.title = chanles[i];
+                    item.category = "其它";
+                    unAddedChannels.add(item);
+                    groupFinance.addChanelItem(item);
+                }
+            }
+            unAddedItems.add(groupFinance);
         }
-        unAddedItems.add(groupFinance);
+
     }
 }
 
