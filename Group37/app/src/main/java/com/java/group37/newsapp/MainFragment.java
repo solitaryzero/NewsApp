@@ -57,19 +57,6 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
     public void onActivityCreated(Bundle savedInstanceState) {
         mCache = ACache.get(MainActivity.mactivity);
         super.onActivityCreated(savedInstanceState);
-        /*viewFlow = (ViewFlow) view.findViewById(R.id.viewflow);
-        indicator = (CircleFlowIndicator) view.findViewById(R.id.viewflowindicator);
-        viewFlow.setFlowIndicator(indicator);
-
-        ids = new ArrayList<Integer>();
-        ids.add(R.drawable.banner1);
-        ids.add(R.drawable.banner2);
-        ids.add(R.drawable.banner3);
-        ids.add(R.drawable.banner4);
-
-        viewFlow.setAdapter(new ImageAdapter());*/
-        //viewFlow.startAutoFlowTimer();
-
         pageNo = 0;
         urlThread=new NewsUrlThread();
         urlThread.start();
@@ -80,7 +67,6 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
 
             newsAdapter = new news_adapter(getActivity(),NewsList);
             list = (RefreshListView) view.findViewById (R.id.Nlistview);
-
             list.setAdapter(newsAdapter);
 
             list.setOnRefreshListener(this);
@@ -90,29 +76,6 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
         }
 
     }
-   /* private class ImageAdapter extends BaseAdapter {
-        @Override
-        public int getCount() {
-            return ids.size();
-        }
-        @Override
-        public Object getItem(int position) {
-            return ids.get(position);
-        }
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null){
-                convertView = getActivity().getLayoutInflater().inflate(R.layout.viewflow_imageviewitem, null);
-            }
-            ImageView imageView = (ImageView) convertView.findViewById(R.id.banner_img);
-            imageView.setImageDrawable(getResources().getDrawable(ids.get(position)));
-            return convertView;
-        }
-    }*/
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
        view = inflater.inflate(R.layout.new_listview, null);

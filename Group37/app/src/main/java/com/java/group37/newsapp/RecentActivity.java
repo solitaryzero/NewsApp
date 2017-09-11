@@ -16,6 +16,8 @@ import com.roughike.bottombar.BottomBar;
  */
 public class RecentActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    private news_adapter newsAdapter;
+    RefreshListView list;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +35,8 @@ public class RecentActivity extends AppCompatActivity
 
         BottomBar bottomBar = (BottomBar) findViewById(R.id.bottomBar);
         bottomBar.selectTabWithId(R.id.tab_recents);
+        list = (RefreshListView) findViewById (R.id.Nlistview);
+
     }
     @Override
     protected void onRestart() {
