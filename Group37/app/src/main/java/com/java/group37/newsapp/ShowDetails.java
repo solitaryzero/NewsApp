@@ -50,9 +50,12 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import static android.os.Environment.getExternalStorageDirectory;
 
+import com.iflytek.cloud.*;
+
 public class ShowDetails extends AppCompatActivity {
 
-    private TextToSpeech tts = null;
+    private SpeechSynthesizer mTts;
+    private SynthesizerListener listener;
     private String rawJSONString;
     private int picNum = 0;
     private boolean isUsingLocalPics;
@@ -74,6 +77,52 @@ public class ShowDetails extends AppCompatActivity {
 
         rawJSONString = getIntent().getStringExtra("rawJSONstring");
         isUsingLocalPics = getIntent().getBooleanExtra("isUsingLocalPictures",false);
+
+        //设置TTS
+        SpeechUtility.createUtility(this, SpeechConstant.APPID +"=59b6a41a");
+        mTts= SpeechSynthesizer.createSynthesizer(this, null);
+        mTts.setParameter(SpeechConstant.VOICE_NAME, "xiaoyan");
+        mTts.setParameter(SpeechConstant.SPEED, "50");
+        mTts.setParameter(SpeechConstant.VOLUME, "80");
+        mTts.setParameter(SpeechConstant.ENGINE_TYPE, SpeechConstant.TYPE_CLOUD);
+
+        listener =new SynthesizerListener() {
+
+            @Override
+            public void onSpeakResumed() {
+
+            }
+
+            @Override
+            public void onSpeakProgress(int arg0, int arg1, int arg2) {
+
+            }
+
+            @Override
+            public void onSpeakPaused() {
+
+            }
+
+            @Override
+            public void onSpeakBegin() {
+
+            }
+
+            @Override
+            public void onEvent(int arg0, int arg1, int arg2, Bundle arg3) {
+
+            }
+
+            @Override
+            public void onCompleted(SpeechError arg0) {
+
+            }
+
+            @Override
+            public void onBufferProgress(int arg0, int arg1, int arg2, String arg3) {
+
+            }
+        };
 
         //设置标题栏
         setContentView(R.layout.activity_show_details);
@@ -150,6 +199,7 @@ public class ShowDetails extends AppCompatActivity {
         headline.setText(headlineStr);
         details.setText(detailsStr);
 
+        /*
         //设置TTS
         tts = new TextToSpeech(this,new TextToSpeech.OnInitListener(){
 
@@ -163,6 +213,7 @@ public class ShowDetails extends AppCompatActivity {
                 }
             }
         });
+        */
 
 
     }
@@ -208,10 +259,6 @@ public class ShowDetails extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-        if (tts!=null) {
-            tts.shutdown();//关闭TTS
-        }
     }
 
     @Override
@@ -268,18 +315,14 @@ public class ShowDetails extends AppCompatActivity {
 
             return super.onOptionsItemSelected(item);
         } else if (id == R.id.action_read){
-            if (!tts.isSpeaking())
+            if (!mTts.isSpeaking())
             {
                 TextView detail = (TextView) findViewById(R.id.NewsDetail);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    tts.speak(detail.getText().toString(),TextToSpeech.QUEUE_FLUSH,null,null);
-                } else {
-                    tts.speak(detail.getText().toString(), TextToSpeech.QUEUE_FLUSH, null);
-                }
+                mTts.startSpeaking(detail.getText().toString(),listener);
                 item.setIcon(R.drawable.ic_stop);
             }
             else {
-                tts.stop();
+                mTts.stopSpeaking();
                 item.setIcon(R.drawable.ic_play_arrow);
             }
         }
