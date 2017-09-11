@@ -1,5 +1,6 @@
 package com.java.group37.newsapp;
 
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.support.annotation.IdRes;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -85,6 +87,7 @@ public class MainActivity extends BaseActivity
     private int needShowPosition=-1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         mactivity=this;
         mainContext = this.getBaseContext();
         super.onCreate(savedInstanceState);
@@ -337,9 +340,11 @@ public class MainActivity extends BaseActivity
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
-
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            recreate();
         } else if (id == R.id.nav_manage) {
-
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            recreate();
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
