@@ -36,10 +36,12 @@ public class SeeFavorited extends AppCompatActivity {
     private List<News> NewsList = new ArrayList<News>();
     RefreshListView list;
     private news_adapter newsAdapter;
+    public static SeeFavorited sfactivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sfactivity = this;
         setContentView(R.layout.recent);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("SkyNews");
@@ -87,7 +89,6 @@ public class SeeFavorited extends AppCompatActivity {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                //Log.e("aa","click "+ i + " " + l);
                 News singleNews = NewsList.get(i-1);
                 Intent intent = new Intent(SeeFavorited.this, ShowDetails.class);
                 intent.putExtra("Headline", singleNews.news_Title);
@@ -102,7 +103,6 @@ public class SeeFavorited extends AppCompatActivity {
                     tmpList = new String[1];
                     tmpList[0] = "";
                 }
-                Log.e("picerr", tmpList[0]);
                 intent.putExtra("PictureList", tmpList);
                 intent.putExtra("rawJSONstring",singleNews.original_String);
                 intent.putExtra("isUsingLocalPictures",true);

@@ -68,7 +68,6 @@ public class ShowDetails extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         rawJSONString = getIntent().getStringExtra("rawJSONstring");
-        Log.println(Log.ERROR,"json",rawJSONString);
         isUsingLocalPics = getIntent().getBooleanExtra("isUsingLocalPictures",false);
 
         //设置标题栏
@@ -98,12 +97,13 @@ public class ShowDetails extends AppCompatActivity {
                         Glide.with(this).load(f).placeholder(R.drawable.loading).error(R.drawable.not_found).dontAnimate().into(headerPicture);
                     }
                     else{
-                        Glide.with(this).load(url).placeholder(R.drawable.loading).error(R.drawable.not_found).dontAnimate().into(headerPicture);
+                        Glide.with(this).load(url).placeholder(R.drawable.loading).error(R.drawable.not_found).crossFade().into(headerPicture);
                     }
                 }
                 ImageView iv = new ImageView(this);
                 iv.setLayoutParams(new Toolbar.LayoutParams(getPixelsFromDp(150),getPixelsFromDp(100)));
                 iv.setScaleType(ImageView.ScaleType.FIT_XY);
+                iv.setTag(pictureURLs[i]);
                 if (isUsingLocalPics){
                     File f = new File(url);
                     Glide.with(this)
@@ -132,7 +132,6 @@ public class ShowDetails extends AppCompatActivity {
                             });
                 }
 
-                iv.setTag(pictureURLs[i]);
                 iv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -265,14 +264,6 @@ public class ShowDetails extends AppCompatActivity {
                         fileOutputStream.close();
                     }
                     item.setIcon(R.drawable.ic_full_star);
-                    String[] fl = fileList();
-                    int count = 0;
-                    for (String name : fl){
-                        if (name.contains(fileName)) {
-                            count++;
-                            Log.e("picsave",name);
-                        }
-                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
