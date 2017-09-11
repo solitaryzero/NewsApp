@@ -2,6 +2,7 @@ package com.java.group37.newsapp;
 
 import android.content.Context;
 import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,8 +72,9 @@ public class news_adapter extends BaseAdapter {
             holder.mImg.setVisibility(View.VISIBLE);
             String tmpPicture = tmpPictures[0];
             File file = new File(tmpPicture);
+            Log.e("picpath",file.getAbsolutePath());
             //加载图片
-            Glide.with(MainActivity.mactivity).load(file).placeholder(R.drawable.loading).error(R.drawable.not_found).dontAnimate().into(holder.mImg);
+            Glide.with(SeeFavorited.sfactivity).load(file).placeholder(R.drawable.loading).error(R.drawable.not_found).dontAnimate().into(holder.mImg);
         }
         else if(!newsItem.news_Pictures.equals("")&&tmpPictures.length != 0){
             holder.mImg.setVisibility(View.VISIBLE);
