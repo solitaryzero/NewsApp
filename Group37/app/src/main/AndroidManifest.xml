@@ -46,6 +46,10 @@
             android:label="ChannelActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".SearchActivity"
+            android:label="SearchActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".SeeOriginalPicture"
             android:label="@string/title_activity_see_original_picture"
             android:theme="@style/AppTheme.NoActionBar"></activity>
