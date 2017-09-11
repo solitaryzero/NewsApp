@@ -140,6 +140,8 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
         }.execute(new Void[] {});
     }
 
+    //public void addCache(News )
+
     public void onItemClick(AdapterView<?> parent, View view, int position,
                             long id) {
         //Toast.makeText(getActivity(), "Click item" + position, Toast.LENGTH_SHORT).show();
@@ -155,6 +157,7 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
             try {
                 oneThread.join();
                 News singleNews = oneAnalyser.news;
+
                 mCache.put(newsId, oneAnalyser.news.original_String);
 
                 String nowFileString = mCache.getAsString("FileToSaveNews");

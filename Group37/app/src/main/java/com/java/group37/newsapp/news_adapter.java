@@ -1,6 +1,7 @@
 package com.java.group37.newsapp;
 
 import android.content.Context;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
+import java.io.File;
 import java.util.List;
 
 public class news_adapter extends BaseAdapter {
@@ -63,7 +65,16 @@ public class news_adapter extends BaseAdapter {
         //处理文章是否有无图片链接
         //******************************************************
         String[] tmpPictures = newsItem.news_Pictures.split("[ ;]");
-        if(!newsItem.news_Pictures.equals("")&&tmpPictures.length != 0){
+        if(newsItem.isUsingLocalPictures == true)
+        {
+            tmpPictures = newsItem.LocalPictures.split("[ ;]");
+            holder.mImg.setVisibility(View.VISIBLE);
+            String tmpPicture = tmpPictures[0];
+            File file = new File(Environment.getExternalStorageDirectory(), tmpPicture);
+            //加载图片
+            Glide.with(MainActivity.mactivity).load(file).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.drawable.loading).error(R.drawable.not_found).dontAnimate().into(holder.mImg);
+        }
+        else if(!newsItem.news_Pictures.equals("")&&tmpPictures.length != 0){
             holder.mImg.setVisibility(View.VISIBLE);
             String tmpPicture = tmpPictures[0];
             Glide.with(MainActivity.mactivity).load(tmpPicture).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.drawable.loading).error(R.drawable.not_found).dontAnimate().into(holder.mImg);

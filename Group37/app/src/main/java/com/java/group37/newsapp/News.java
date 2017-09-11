@@ -26,6 +26,8 @@ public class News {
     public String news_Pictures;             //新闻的图片路径
     public String repeat_ID;                 //与该条新闻重复的新闻ID
     public String original_String;
+    public boolean isUsingLocalPictures;
+    public String LocalPictures;
 
     public String seggedTitle;               //新闻分词后标题结果
     public List<String> seggedPListOfContent;//新闻正文的分词结果
@@ -33,6 +35,7 @@ public class News {
     public List<String> locations;           //地点列表
     public List<String> organizations;       //组织机构列表
     public List<String> Keywords;            //新闻中关键词列表
+    public List<Integer> Keyword_score;
 
     public int wordCountOfTitle;
     public int wordCountOfContent;
@@ -59,12 +62,15 @@ public class News {
         repeat_ID = "";
         seggedTitle = "";
         original_String = "";
+        isUsingLocalPictures = false;
+        LocalPictures = "";
 
         seggedPListOfContent = new ArrayList<String>();
         persons = new ArrayList<String>();
         locations = new ArrayList<String>();
         organizations = new ArrayList<String>();
         Keywords = new ArrayList<String>();
+        Keyword_score = new ArrayList<Integer>();
 
         wordCountOfTitle = 0;
         wordCountOfContent = 0;
@@ -92,6 +98,8 @@ public class News {
         this.repeat_ID = newOne.repeat_ID;
         this.seggedTitle = newOne.seggedTitle;
         this.original_String = newOne.original_String;
+        this.isUsingLocalPictures = newOne.isUsingLocalPictures;
+        this.LocalPictures = newOne.LocalPictures;
 
         this.seggedPListOfContent = newOne.seggedPListOfContent;
         this.persons = newOne.persons;

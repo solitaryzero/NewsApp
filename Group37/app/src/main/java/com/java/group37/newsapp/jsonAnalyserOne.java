@@ -29,6 +29,16 @@ public class jsonAnalyserOne {
             news.news_Journal = list.getString("news_Journal");
             news.crawl_Time = list.getString("crawl_Time");
             news.repeat_ID = list.getString("repeat_ID");
+            JSONArray infArray = list.getJSONArray("Keywords");
+            news.Keywords = new ArrayList<String>();
+            news.Keyword_score = new ArrayList<Integer>();
+            for (int i = 0; i < infArray.length(); i++) {
+                JSONObject inf_Array = infArray.getJSONObject(i);
+                String word = inf_Array.getString("word");
+                Integer score = inf_Array.getInt("score");
+                news.Keywords.add(word);
+                news.Keyword_score.add(score);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }

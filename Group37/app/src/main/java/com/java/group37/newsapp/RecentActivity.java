@@ -1,5 +1,6 @@
 package com.java.group37.newsapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -9,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.SimpleAdapter;
 
 import com.roughike.bottombar.BottomBar;
@@ -55,10 +58,22 @@ public class RecentActivity extends AppCompatActivity
         list = (RefreshListView) findViewById (R.id.Nlistview);
         newsAdapter = new news_adapter(this,NewsList);
         list.setAdapter(newsAdapter);
-		 list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.e("aa","click");
+                Log.e("aa","click "+ i + " " + l);
+                News singleNews = NewsList.get(i-1);
+                Intent intent = new Intent(RecentActivity.this, ShowDetails.class);
+                intent.putExtra("Headline", singleNews.news_Title);
+                String longString = singleNews.news_Content.replaceAll("　", "\n");
+                intent.putExtra("Details", longString);
+                String[] tmpList = singleNews.news_Pictures.split("[ ;]");
+                if(tmpList.length == 0) {
+                    tmpList = new String[1];
+                    tmpList[0] = "";
+                }
+                intent.putExtra("PictureList", tmpList);
+                startActivity(intent);
             }
         });
 
