@@ -43,6 +43,7 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.target.ViewTarget;
 
@@ -87,14 +88,11 @@ public class ShowDetails extends AppCompatActivity {
         });
 
         //设置图片栏
-        ImageView headerPicture = (ImageView) findViewById(R.id.HeaderPicture);
+        final ImageView headerPicture = (ImageView) findViewById(R.id.HeaderPicture);
         HorizontalScrollView pictureScroll = (HorizontalScrollView) findViewById(R.id.PictureScroll);
         LinearLayout ll = (LinearLayout) findViewById(R.id.Pictures);
         final String[] pictureURLs = getIntent().getStringArrayExtra("PictureList");
         if ((pictureURLs.length > 1) || !(pictureURLs[0].equals(""))) {
-            for (int i=0;i<pictureURLs.length;i++){
-                bitmaps.add(null);
-            }
             picNum = pictureURLs.length;
             for (int i=0;i<pictureURLs.length;i++){
                 String url = pictureURLs[i];
@@ -116,36 +114,13 @@ public class ShowDetails extends AppCompatActivity {
                     Glide.with(this)
                             .load(f)
                             .crossFade()
-                            .into(new GlideDrawableImageViewTarget(iv) {
-                                @Override
-                                public void onResourceReady(GlideDrawable drawable, GlideAnimation anim) {
-                                    super.onResourceReady(drawable, anim);
-                                    ImageView iv = (ImageView) this.getView();
-                                    iv.setDrawingCacheEnabled(true);
-                                    Bitmap bm = Bitmap.createBitmap(iv.getDrawingCache());
-                                    iv.setDrawingCacheEnabled(false);
-                                    bitmaps.set(Integer.parseInt(iv.getTag(R.id.position_tag).toString()), bm);
-                                }
-                            });
+                            .into(iv);
                 }
                 else {
                     Glide.with(this)
                             .load(url)
                             .crossFade()
-                            .into(new GlideDrawableImageViewTarget(iv) {
-                                      @Override
-                                      public void onResourceReady(GlideDrawable drawable, GlideAnimation anim) {
-                                          super.onResourceReady(drawable, anim);
-                                          ImageView iv = (ImageView) this.getView();
-                                          iv.setDrawingCacheEnabled(true);
-                                          Bitmap bm = Bitmap.createBitmap(iv.getDrawingCache());
-                                          iv.setDrawingCacheEnabled(false);
-                                          bitmaps.set(Integer.parseInt(iv.getTag(R.id.position_tag).toString()), bm);
-                                          Log.e("bitmaps",iv.getTag(R.id.position_tag).toString());
-                                          Log.e("bitmaps",String.valueOf(bm == null));
-                                      }
-                                  }
-                            );
+                            .into(iv);
                 }
 
                 iv.setOnClickListener(new View.OnClickListener() {
@@ -275,7 +250,12 @@ public class ShowDetails extends AppCompatActivity {
                     for (int i=0;i<picNum;i++){
                         fileOutputStream = openFileOutput("pic"+String.valueOf(i)+"_"+fileName+".png",
                                 Context.MODE_PRIVATE);
-                        bitmaps.get(i).compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
+                        LinearLayout ll = (LinearLayout) findViewById(R.id.Pictures);
+                        ImageView iv = (ImageView) ll.getChildAt(i);
+                        iv.setDrawingCacheEnabled(true);
+                        Bitmap bm = Bitmap.createBitmap(iv.getDrawingCache());
+                        iv.setDrawingCacheEnabled(false);
+                        bm.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
                         fileOutputStream.flush();
                         fileOutputStream.close();
                     }
