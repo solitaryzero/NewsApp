@@ -4,38 +4,9 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-   <!-- <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:id="@+id/frameLayout2">
-
-        <com.java.group37.newsapp.widget.ViewFlow
-            android:id="@+id/viewflow"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-        </com.java.group37.newsapp.widget.ViewFlow>
-
-        <com.java.group37.newsapp.widget.CircleFlowIndicator
-            android:id="@+id/viewflowindicator"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
-            android:layout_marginBottom="10dp"
-            android:padding="10dp"
-            app:activeColor="#5677fc"
-            app:activeType="fill"
-            app:fadeOut="1000"
-            app:inactiveColor="#44000000"
-            app:inactiveType="fill"
-            app:radius="4dp"/>
-    </FrameLayout>-->
-
         <com.java.group37.newsapp.RefreshListView
             android:id="@+id/Nlistview"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent" >
         </com.java.group37.newsapp.RefreshListView>
-
-
 </LinearLayout>
