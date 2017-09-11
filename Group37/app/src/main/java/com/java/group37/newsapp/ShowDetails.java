@@ -39,9 +39,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.target.ViewTarget;
 
 import static android.os.Environment.getExternalStorageDirectory;
 
@@ -90,6 +93,10 @@ public class ShowDetails extends AppCompatActivity {
         final String[] pictureURLs = getIntent().getStringArrayExtra("PictureList");
         if ((pictureURLs.length > 1) || !(pictureURLs[0].equals(""))) {
             for (int i=0;i<pictureURLs.length;i++){
+                bitmaps.add(null);
+            }
+            picNum = pictureURLs.length;
+            for (int i=0;i<pictureURLs.length;i++){
                 String url = pictureURLs[i];
                 if (i==0){
                     if (isUsingLocalPics){
@@ -103,40 +110,49 @@ public class ShowDetails extends AppCompatActivity {
                 ImageView iv = new ImageView(this);
                 iv.setLayoutParams(new Toolbar.LayoutParams(getPixelsFromDp(150),getPixelsFromDp(100)));
                 iv.setScaleType(ImageView.ScaleType.FIT_XY);
-                iv.setTag(pictureURLs[i]);
+                iv.setTag(R.id.position_tag,i);
                 if (isUsingLocalPics){
                     File f = new File(url);
                     Glide.with(this)
                             .load(f)
-                            .asBitmap()
-                            .into(new BitmapImageViewTarget(iv) {
+                            .crossFade()
+                            .into(new GlideDrawableImageViewTarget(iv) {
                                 @Override
-                                public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
-                                    super.onResourceReady(bitmap, anim);
-                                    bitmaps.add(bitmap);
-                                    picNum++;
+                                public void onResourceReady(GlideDrawable drawable, GlideAnimation anim) {
+                                    super.onResourceReady(drawable, anim);
+                                    ImageView iv = (ImageView) this.getView();
+                                    iv.setDrawingCacheEnabled(true);
+                                    Bitmap bm = Bitmap.createBitmap(iv.getDrawingCache());
+                                    iv.setDrawingCacheEnabled(false);
+                                    bitmaps.set(Integer.parseInt(iv.getTag(R.id.position_tag).toString()), bm);
                                 }
                             });
                 }
                 else {
                     Glide.with(this)
                             .load(url)
-                            .asBitmap()
-                            .into(new BitmapImageViewTarget(iv) {
-                                @Override
-                                public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
-                                    super.onResourceReady(bitmap, anim);
-                                    bitmaps.add(bitmap);
-                                    picNum++;
-                                }
-                            });
+                            .crossFade()
+                            .into(new GlideDrawableImageViewTarget(iv) {
+                                      @Override
+                                      public void onResourceReady(GlideDrawable drawable, GlideAnimation anim) {
+                                          super.onResourceReady(drawable, anim);
+                                          ImageView iv = (ImageView) this.getView();
+                                          iv.setDrawingCacheEnabled(true);
+                                          Bitmap bm = Bitmap.createBitmap(iv.getDrawingCache());
+                                          iv.setDrawingCacheEnabled(false);
+                                          bitmaps.set(Integer.parseInt(iv.getTag(R.id.position_tag).toString()), bm);
+                                          Log.e("bitmaps",iv.getTag(R.id.position_tag).toString());
+                                          Log.e("bitmaps",String.valueOf(bm == null));
+                                      }
+                                  }
+                            );
                 }
 
                 iv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Intent intent = new Intent(ShowDetails.this,SeeOriginalPicture.class);
-                        intent.putExtra("URL",view.getTag().toString());
+                        intent.putExtra("URL",pictureURLs[Integer.parseInt(view.getTag(R.id.position_tag).toString())]);
                         intent.putExtra("isUsingLocalPictures",isUsingLocalPics);
                         startActivity(intent);
                     }
@@ -259,7 +275,7 @@ public class ShowDetails extends AppCompatActivity {
                     for (int i=0;i<picNum;i++){
                         fileOutputStream = openFileOutput("pic"+String.valueOf(i)+"_"+fileName+".png",
                                 Context.MODE_PRIVATE);
-                        bitmaps.get(i).compress(Bitmap.CompressFormat.PNG, 90, fileOutputStream);
+                        bitmaps.get(i).compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
                         fileOutputStream.flush();
                         fileOutputStream.close();
                     }
