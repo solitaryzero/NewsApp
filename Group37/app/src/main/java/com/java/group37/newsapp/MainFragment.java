@@ -296,6 +296,13 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
                 intent.putExtra("rawJSONstring",singleNews.original_String);
                 //Log.e("original", singleNews.original_String);
                 intent.putExtra("isUsingLocalPictures", false);
+                if (RecommendList.size() > 0)
+                    intent.putExtra("RecommendRawJsonString0", RecommendList.get(0).original_String);
+                if (RecommendList.size() > 1)
+                    intent.putExtra("RecommendRawJsonString1", RecommendList.get(1).original_String);
+                if (RecommendList.size() > 2)
+                    intent.putExtra("RecommendRawJsonString2", RecommendList.get(2).original_String);
+
                 startActivity(intent);
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -328,6 +335,12 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
             intent.putExtra("rawJSONstring",singleNews.original_String);
             //Log.e("original", singleNews.original_String);
             intent.putExtra("isUsingLocalPictures", false);
+            if (RecommendList.size() > 0)
+                intent.putExtra("RecommendRawJsonString0", RecommendList.get(0).original_String);
+            if (RecommendList.size() > 1)
+                intent.putExtra("RecommendRawJsonString1", RecommendList.get(1).original_String);
+            if (RecommendList.size() > 2)
+                intent.putExtra("RecommendRawJsonString2", RecommendList.get(2).original_String);
             startActivity(intent);
         }
     }
