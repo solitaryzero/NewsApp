@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
 import com.roughike.bottombar.BottomBar;
@@ -30,7 +31,7 @@ public class RecentActivity extends AppCompatActivity
 
     private ACache mCache;
     private List<News> NewsList = new ArrayList<News>();
-    RefreshListView list;
+    ListView list;
     private news_adapter newsAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,14 +65,14 @@ public class RecentActivity extends AppCompatActivity
             News singleNews = oneAnalyser.news;
             NewsList.add(singleNews);
         }
-        list = (RefreshListView) findViewById (R.id.Nlistview);
+        list = (ListView) findViewById (R.id.Nlistview);
         newsAdapter = new news_adapter(this,NewsList);
         list.setAdapter(newsAdapter);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 //Log.e("aa","click "+ i + " " + l);
-                News singleNews = NewsList.get(i-1);
+                News singleNews = NewsList.get(i);
                 Intent intent = new Intent(RecentActivity.this, ShowDetails.class);
                 intent.putExtra("Headline", singleNews.news_Title);
                 String longString = singleNews.news_Content.replaceAll("　", "\n");

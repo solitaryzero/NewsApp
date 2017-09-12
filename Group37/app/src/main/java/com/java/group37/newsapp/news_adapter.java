@@ -1,6 +1,7 @@
 package com.java.group37.newsapp;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -56,8 +57,13 @@ public class news_adapter extends BaseAdapter {
         else{
             holder = (ViewHolder) view.getTag();
         }
-
+        holder.mDate.setTextColor(Color.parseColor("#2b2b2b"));
+        holder.mTitle.setTextColor(Color.parseColor("#2b2b2b"));
         News newsItem = mDatas.get(position);
+        if(newsItem.getChick()){
+            holder.mDate.setTextColor(Color.parseColor("#9D9D9D"));
+            holder.mTitle.setTextColor(Color.parseColor("#9D9D9D"));
+        }
         holder.mTitle.setText(newsItem.news_Title+"                               ");
         holder.mContent.setText(newsItem.news_Content);
         holder.mDate.setText(newsItem.news_Time);

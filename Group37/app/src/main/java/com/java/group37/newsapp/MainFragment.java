@@ -242,9 +242,11 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
                             long id) {
         //Toast.makeText(getActivity(), "Click item" + position, Toast.LENGTH_SHORT).show();
         TextView textView = (TextView) view.findViewById(R.id.title);
-        textView.setTextColor(Color.BLUE);
+        textView.setTextColor(Color.parseColor("#9D9D9D"));
+        textView = (TextView) view.findViewById(R.id.date);
+        textView.setTextColor(Color.parseColor("#9D9D9D"));
         newsId = NewsList.get(position-1).news_ID;
-
+        NewsList.get(position-1).setChick(true);
         String tmpString = mCache.getAsString(newsId);
         //String tmpString = null;
         if (tmpString == null) {

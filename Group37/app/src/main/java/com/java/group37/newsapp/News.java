@@ -39,6 +39,7 @@ public class News {
 
     public int wordCountOfTitle;
     public int wordCountOfContent;
+    private boolean chick;
 
     News()
     {
@@ -64,6 +65,7 @@ public class News {
         original_String = "";
         isUsingLocalPictures = false;
         LocalPictures = "";
+        chick = false;
 
         seggedPListOfContent = new ArrayList<String>();
         persons = new ArrayList<String>();
@@ -100,6 +102,7 @@ public class News {
         this.original_String = newOne.original_String;
         this.isUsingLocalPictures = newOne.isUsingLocalPictures;
         this.LocalPictures = newOne.LocalPictures;
+        this.chick = newOne.getChick();
 
         this.seggedPListOfContent = newOne.seggedPListOfContent;
         this.persons = newOne.persons;
@@ -136,6 +139,7 @@ public class News {
         this.seggedTitle = newOne.seggedTitle;
         this.original_String = newOne.original_String;
         this.isUsingLocalPictures = true;
+        this.chick = newOne.getChick();
 
         if (local_pictures.length > 0)
             this.LocalPictures = local_pictures[0];
@@ -154,4 +158,7 @@ public class News {
         this.wordCountOfTitle = newOne.wordCountOfTitle ;
         this.wordCountOfContent = newOne.wordCountOfContent;
     }
+    public void setChick(boolean s){this.chick = s;}
+
+    public boolean getChick(){return chick;}
 }

@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
 import com.roughike.bottombar.BottomBar;
@@ -30,7 +31,7 @@ public class SearchActivity extends AppCompatActivity
 
     private ACache mCache;
     private List<News> NewsList = new ArrayList<News>();
-    RefreshListView list;
+    ListView list;
     private news_adapter newsAdapter;
     jsonAnalyserList analyser;
     jsonAnalyserOne oneAnalyser;
@@ -58,7 +59,7 @@ public class SearchActivity extends AppCompatActivity
                 finish();
             }
         });
-        list = (RefreshListView) findViewById (R.id.Nlistview);
+        list = (ListView) findViewById (R.id.Nlistview);
         Intent intent = getIntent();
         searchKeywords = intent.getStringExtra("Keywords");
 
@@ -83,7 +84,7 @@ public class SearchActivity extends AppCompatActivity
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Log.e("aa","click "+ i + " " + l);
-                newsIdSearch = NewsList.get(i-1).news_ID;
+                newsIdSearch = NewsList.get(i).news_ID;
 
                 String tmpString = mCache.getAsString(newsIdSearch);
                 //String tmpString = null;

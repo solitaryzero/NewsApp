@@ -44,14 +44,14 @@
        >
 
 
-        <com.java.group37.newsapp.RefreshListView
+        <ListView
             android:id="@+id/Nlistview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_above="@+id/bottomBar"
             android:background="@color/color_white">
-        </com.java.group37.newsapp.RefreshListView>
+        </ListView>
 
         <com.roughike.bottombar.BottomBar
             android:id="@+id/bottomBar"

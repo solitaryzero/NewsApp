@@ -126,7 +126,7 @@ public class RefreshListView extends ListView implements OnScrollListener {
                     }
                     // 下拉头布局
                     headerView.setPadding(0, paddingTop, 0, 0);
-                    return true;
+                    //return true;
                 }
                 break;
             case MotionEvent.ACTION_UP:
