@@ -158,6 +158,7 @@ public class ChannelActivity extends AppCompatActivity {
         String tmpTitles = mCache.getAsString("TitlesSavedInCache");
         String[] chanles = new String[]{"全部","科技","教育","军事","国内","社会","文化","汽车","国际","体育","财经","健康","娱乐"};
         if (tmpTitles == null)
+        //if (true)
         {
             for (int i = 0; i < chanles.length; i++)
             {
