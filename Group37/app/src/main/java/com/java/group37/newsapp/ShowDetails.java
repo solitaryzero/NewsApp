@@ -435,6 +435,22 @@ public class ShowDetails extends AppCompatActivity {
         setupRecommend();
     }
 
+    public void onPause(){
+        super.onPause();
+        if (isSpeaking == 1){
+            mTts.pauseSpeaking();
+            isSpeaking = 3;
+        }
+    }
+
+    public void onResume(){
+        super.onResume();
+        if (isSpeaking == 3){
+            mTts.resumeSpeaking();
+            isSpeaking = 1;
+        }
+    }
+
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
