@@ -19,11 +19,15 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.content.Intent;
+import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,6 +40,7 @@ import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Collections;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -65,16 +70,115 @@ public class ShowDetails extends AppCompatActivity {
     private boolean isUsingLocalPics;
     private List<Bitmap> bitmaps = new ArrayList<Bitmap>();
     private int isSpeaking = 0;
+    private List<News> newsList = new ArrayList<News>();
+    private news_adapter newsAdapter;
+
+    private List<News> RecommendList = new ArrayList<News>();
+    String searchKeywords;
+    RecommendUrlThread recommendThread;
+    OneRecommendThread oneRecommendThread;
+    jsonAnalyserList analyser;
+    private ACache mCache;
+    jsonAnalyserOne recommendAnalyser;
+    String newsIdRecommend;
+
 
     private int getPixelsFromDp(int size){
-
         DisplayMetrics metrics =new DisplayMetrics();
-
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
-
         return(size * metrics.densityDpi) / DisplayMetrics.DENSITY_DEFAULT;
-
     }
+
+    //to recommend news
+    public void modifyCache(News singleNews)
+    {
+        Log.e("modifyCache", Integer.toString(singleNews.Keywords.size()));
+        String nowFileString = mCache.getAsString("FileOfWordsToRecommend");
+        List<String> wordList = new ArrayList<String>();
+        List<Double> wordScoreList = new ArrayList<Double>();
+        if (nowFileString != null)
+        {
+            mCache.remove("FileOfWordsToRecommend");
+            String[] wordListFile = nowFileString.split(" ");
+            for (int i = 0; i < wordListFile.length; i++)
+            {
+                String currentWord = wordListFile[i];
+                if (!currentWord.equals(""))
+                {
+                    String currentWordScoreString = mCache.getAsString(currentWord);
+                    if (currentWordScoreString != null) {
+                        mCache.remove(currentWord);
+                        wordList.add(currentWord);
+                        wordScoreList.add(Double.valueOf(currentWordScoreString) / 2.0);
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < singleNews.Keywords.size(); i++)
+        {
+            if (i >= 10) break;
+            String currentWord = singleNews.Keywords.get(i);
+            Double currentWordScore = singleNews.Keyword_score.get(i);
+            if (!currentWord.equals(""))
+            {
+                int flag = 0;
+                for (int j = 0; j < wordList.size(); j++)
+                    if (currentWord.equals(wordList.get(j)))
+                    {
+                        wordScoreList.set(j, wordScoreList.get(j) + currentWordScore);
+                        flag = 1;
+                    }
+                if (flag == 0)
+                {
+                    wordList.add(currentWord);
+                    wordScoreList.add(currentWordScore);
+                }
+            }
+        }
+        for (int i = 0; i < wordList.size(); i++)
+            for (int j = 0; j < i; j++)
+                if (wordScoreList.get(j) < wordScoreList.get(j+1)) {
+                    Collections.swap(wordList, j, j+1);
+                    Collections.swap(wordScoreList, j, j+1);
+                }
+        String toCacheString = "";
+        searchKeywords = "";
+        if (wordList.size() > 0) {
+            toCacheString = wordList.get(0);
+            searchKeywords = wordList.get(0);
+        }
+        for (int i = 1; i < wordList.size(); i++){
+            if (i >= 10)    break;
+            if (i < 3)  searchKeywords += wordList.get(i);
+            toCacheString += " " + wordList.get(i);
+            mCache.put(wordList.get(i), Double.toString(wordScoreList.get(i)));
+        }
+        mCache.put("FileOfWordsToRecommend", toCacheString);
+        //Log.e("ToCacheString", toCacheString);
+        searchRecommend();
+    }
+
+    public void searchRecommend(){
+        recommendThread=new RecommendUrlThread();
+        recommendThread.start();
+        try {
+            recommendThread.join();
+            RecommendList = new ArrayList<News>();
+            for (int i = 0; i < analyser.newsList.size(); i++)
+            {
+                if (i >= 3) break;
+                newsIdRecommend = analyser.newsList.get(i).news_ID;
+                //Log.e("recommend"+i, newsIdRecommend);
+                oneRecommendThread = new OneRecommendThread();
+                oneRecommendThread.start();
+                oneRecommendThread.join();
+                RecommendList.add(recommendAnalyser.news);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void showShare() {
         OnekeyShare oks = new OnekeyShare();
@@ -112,10 +216,25 @@ public class ShowDetails extends AppCompatActivity {
         oks.show(this);
     }
 
+    public void fixListViewHeight(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        int totalHeight = 0;
+        if (listAdapter == null) {return;}
+        for (int i = 0, len = listAdapter.getCount(); i < len; i++) {
+            View listViewItem = listAdapter.getView(i , null, listView);
+            listViewItem.measure(0, 0);
+            totalHeight += listViewItem.getMeasuredHeight();
+        }
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight+ (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mCache = ACache.get(MainActivity.mactivity);
         rawJSONString = getIntent().getStringExtra("rawJSONstring");
         isUsingLocalPics = getIntent().getBooleanExtra("isUsingLocalPictures",false);
 
@@ -240,23 +359,66 @@ public class ShowDetails extends AppCompatActivity {
         headline.setText(headlineStr);
         details.setText(detailsStr);
 
-        /*
-        //设置TTS
-        tts = new TextToSpeech(this,new TextToSpeech.OnInitListener(){
+        //设置推荐栏
+        jsonAnalyserOne oa;
+        String rcjson0 = getIntent().getStringExtra("RecommendRawJsonString0");
+        if (rcjson0 != null){
+            oa = new jsonAnalyserOne(rcjson0);
+            News rc0 = oa.news;
+            newsList.add(rc0);
+        }
+        String rcjson1 = getIntent().getStringExtra("RecommendRawJsonString1");
+        if (rcjson1 != null){
+            oa = new jsonAnalyserOne(rcjson1);
+            News rc1 = oa.news;
+            newsList.add(rc1);
+        }
+        String rcjson2 = getIntent().getStringExtra("RecommendRawJsonString2");
+        if (rcjson2 != null){
+            oa = new jsonAnalyserOne(rcjson2);
+            News rc2 = oa.news;
+            newsList.add(rc2);
+        }
 
+        if (newsList.size() == 0){
+            TextView rh = (TextView) findViewById(R.id.RecommendHeader);
+            rh.setVisibility(View.GONE);
+        }
+        ListView list = (ListView) findViewById (R.id.RecommendList);
+        newsAdapter = new news_adapter(this,newsList);
+        Log.e("rc",String.valueOf(newsAdapter.getCount()));
+        list.setAdapter(newsAdapter);
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onInit(int status) {
-                if (status==TextToSpeech.SUCCESS) {
-                    int supported = tts.setLanguage(Locale.CHINESE);
-                    if ((supported!=TextToSpeech.LANG_AVAILABLE)&&(supported!=TextToSpeech.LANG_COUNTRY_AVAILABLE)) {
-                        Toast.makeText(ShowDetails.this, "不支持当前语言！", Toast.LENGTH_SHORT).show();
-                    }
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                News singleNews = newsList.get(i);
+                modifyCache(singleNews);
+                Intent intent = new Intent(ShowDetails.this, ShowDetails.class);
+                intent.putExtra("Headline", singleNews.news_Title);
+                String longString = singleNews.news_Content.replaceAll("　", "\n");
+                intent.putExtra("Details", longString);
+                String[] tmpList;
+                if (singleNews.isUsingLocalPictures == true)
+                    tmpList = singleNews.LocalPictures.split("[ ;]");
+                else
+                    tmpList = singleNews.news_Pictures.split("[ ;]");
+                if(tmpList.length == 0) {
+                    tmpList = new String[1];
+                    tmpList[0] = "";
                 }
+                intent.putExtra("PictureList", tmpList);
+                intent.putExtra("rawJSONstring",singleNews.original_String);
+                intent.putExtra("isUsingLocalPictures",false);
+                if (RecommendList.size() > 0)
+                    intent.putExtra("RecommendRawJsonString0", RecommendList.get(0).original_String);
+                if (RecommendList.size() > 1)
+                    intent.putExtra("RecommendRawJsonString1", RecommendList.get(1).original_String);
+                if (RecommendList.size() > 2)
+                    intent.putExtra("RecommendRawJsonString2", RecommendList.get(2).original_String);
+                startActivity(intent);
             }
         });
-        */
-
-
+        fixListViewHeight(list);
     }
 
     @Override
@@ -381,4 +543,28 @@ public class ShowDetails extends AppCompatActivity {
         }
         return true;
     }
+
+    class RecommendUrlThread extends Thread {
+        @Override
+        public void run()
+        {
+            SearchNewsAccesser accesser = new SearchNewsAccesser(0, 0, searchKeywords);
+            String jsonString = accesser.stringBuilder.toString();
+            //Log.i("pageNo", Integer.toString(pageNo));
+            //Log.i("newsType",Integer.toString(newsType));
+            Log.i("json",jsonString);
+            analyser = new jsonAnalyserList(jsonString);
+        }
+    }
+
+    class OneRecommendThread extends Thread {
+        @Override
+        public void run()
+        {
+            OneNewsAccesser oneAccesser = new OneNewsAccesser(newsIdRecommend);
+            String jsonOneString = oneAccesser.stringBuilder.toString();
+            recommendAnalyser = new jsonAnalyserOne(jsonOneString);
+        }
+    }
+
 }

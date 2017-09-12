@@ -67,15 +67,30 @@
                 android:id="@+id/NewsDetail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:background="@color/color_white"
                 android:lineSpacingMultiplier="1.5"
                 android:text="Hello World!"
-                android:background="@color/color_white"
-                android:textColor="@color/color_2b2b2b"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/color_2b2b2b"
                 android:textSize="14sp"
-                android:layout_margin="20dp"
                 tools:layout_editor_absoluteX="8dp"
                 tools:layout_editor_absoluteY="103dp" />
+
+            <TextView
+                android:id="@+id/RecommendHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:text="推荐新闻\n---------------------------------------------"
+                android:textSize="12sp" />
+
+            <ListView
+                android:id="@+id/RecommendList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:layout_editor_absoluteX="8dp"
+                tools:layout_editor_absoluteY="8dp" />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 

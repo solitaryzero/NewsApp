@@ -18,6 +18,10 @@ public class jsonAnalyserOne {
             news.news_Source = list.getString("news_Source");
             news.news_Title = list.getString("news_Title");
             news.news_Time = list.getString("news_Time");
+            String s = news.news_Time;
+            if (s.length()>8){
+                news.news_Time = s.substring(0,4)+"年"+s.substring(4,6)+"月"+s.substring(6,8)+"日";
+            }
             news.news_URL = list.getString("news_URL");
             news.news_Author = list.getString("news_Author");
             news.lang_Type = list.getString("lang_Type");

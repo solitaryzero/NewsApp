@@ -91,7 +91,7 @@ public class MainActivity extends BaseActivity
         //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         mactivity=this;
         mCache = ACache.get(MainActivity.mactivity);
-        mCache.put("IsHavingPictures","true");
+        //mCache.put("IsHavingPictures","true");
         mainContext = this.getBaseContext();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);

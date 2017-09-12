@@ -21,6 +21,10 @@ public class jsonAnalyserList{
                 tmp.news_Source = inf_Array.getString("news_Source");
                 tmp.news_Title = inf_Array.getString("news_Title");
                 tmp.news_Time = inf_Array.getString("news_Time");
+                String s = tmp.news_Time;
+                if (s.length()>8){
+                    tmp.news_Time = s.substring(0,4)+"年"+s.substring(4,6)+"月"+s.substring(6,8)+"日";
+                }
                 tmp.news_URL = inf_Array.getString("news_URL");
                 tmp.news_Author = inf_Array.getString("news_Author");
                 tmp.lang_Type = inf_Array.getString("lang_Type");
