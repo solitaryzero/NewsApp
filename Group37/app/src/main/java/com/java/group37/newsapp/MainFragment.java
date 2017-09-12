@@ -171,7 +171,7 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
                     if (currentWordScoreString != null) {
                         mCache.remove(currentWord);
                         wordList.add(currentWord);
-                        wordScoreList.add(Double.valueOf(currentWordScoreString) / 2.0);
+                        wordScoreList.add(Double.valueOf(currentWordScoreString) * 0.05);
                     }
                 }
             }
