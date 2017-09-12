@@ -26,6 +26,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import cn.sharesdk.onekeyshare.OnekeyShare;
+
 public class MainFragment extends Fragment implements OnRefreshListener,OnItemClickListener
 {
     private int newsType = 0;
@@ -59,6 +61,7 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
     {
         this.newsType = newsType;
     }
+
 
     public void onActivityCreated(Bundle savedInstanceState) {
         mCache = ACache.get(MainActivity.mactivity);
