@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+        <TextView
+            android:id="@+id/nav_0"
+            android:icon="@drawable/ic_menu_gallery"
+            android:text="关于我们 Group_37"
+            android:layout_marginBottom="6dp"
+            android:lineSpacingMultiplier="1.5"
+            android:textColor="@color/color_white"
+            android:background="@color/colorPrimary"
+            android:textSize="20sp"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent" />
+
+        <TextView
+            android:id="@+id/nav_1"
+            android:icon="@drawable/ic_menu_gallery"
+            android:text="开发者  祝方伟  2015011317"
+            android:layout_marginTop="6dp"
+            android:textSize="16sp"
+            android:lineSpacingMultiplier="1.5"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent" />
+        <TextView
+            android:id="@+id/nav_2"
+            android:icon="@drawable/ic_menu_gallery"
+            android:text="开发者  寇明阳  2015011318"
+            android:layout_marginTop="6dp"
+            android:lineSpacingMultiplier="1.5"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent" />
+        <TextView
+            android:id="@+id/nav_3"
+            android:icon="@drawable/ic_menu_gallery"
+            android:text="开发者  姚   超  2015011319"
+            android:layout_marginTop="6dp"
+            android:lineSpacingMultiplier="1.5"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent" />
+
+</LinearLayout>

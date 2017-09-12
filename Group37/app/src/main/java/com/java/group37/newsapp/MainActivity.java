@@ -2,7 +2,9 @@ package com.java.group37.newsapp;
 
 import android.content.ClipData;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -10,11 +12,13 @@ import android.support.annotation.IdRes;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -56,6 +60,7 @@ public class MainActivity extends BaseActivity
     private BGARefreshLayout mBGARefreshLayout;
     public static MainActivity mactivity;
     public static Context mainContext;
+    public static int i = 0;
     private ACache mCache;
     private RecyclerView mRecyclerView;
     private Context mContext;
@@ -81,6 +86,9 @@ public class MainActivity extends BaseActivity
     private ViewPager mViewPager;
     private TabAdapter mAdapter ;
     private BottomNavigationView butttom;
+    NavigationView navigationView;
+    String menutitle1;
+    String menutitle2 = "切换到无图模式";
     View switch_view;
     //TitleFragmentAdapter adapter;
     //List<MyChannel> myChannels;
@@ -89,6 +97,12 @@ public class MainActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        if (i % 2 == 0){
+            menutitle1 = "切换到夜间模式";
+        }
+        else{
+            menutitle1 = "切换到日间模式";
+        }
         mactivity=this;
         mCache = ACache.get(MainActivity.mactivity);
         mCache.put("IsHavingPictures","true");
@@ -99,8 +113,6 @@ public class MainActivity extends BaseActivity
         mViewPager = (ViewPager) findViewById(R.id.pager);//导航栏下的page
         mAdapter = new TabAdapter(getSupportFragmentManager());//导航栏
         mViewPager.setAdapter(mAdapter);//导航栏适配器
-
-
 
         //mAdapter.removeFragment("财经");
 
@@ -144,8 +156,13 @@ public class MainActivity extends BaseActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        Menu mn = navigationView.getMenu();
+        MenuItem menuItem = mn.findItem(R.id.nav_slideshow);
+        menuItem.setTitle(menutitle1);
+        menuItem = mn.findItem(R.id.nav_gallery);
+        menuItem.setTitle(menutitle2);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);//最顶栏
         toolbar.setTitle("SkyNews");
         setSupportActionBar(toolbar);
@@ -153,7 +170,6 @@ public class MainActivity extends BaseActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
     }
 
     @Override
@@ -178,7 +194,7 @@ public class MainActivity extends BaseActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);//最顶栏
         toolbar.setTitle("SkyNews");
@@ -190,68 +206,7 @@ public class MainActivity extends BaseActivity
 
     }
 
-    /*@Override
-    public void updateData() {
-        loadData();
-    }
 
-    @Override
-    public void onChannelSeleted(boolean update,final int posisiton) {
-        if(!update) {
-        }else {
-            needShowPosition=posisiton;
-        }
-
-    }
-
-
-    private void loadData() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                String data = getFromRaw();
-                List<MyChannel> alldata = GsonUtil.jsonToBeanList(data, MyChannel.class);
-                final List<MyChannel> showChannels = dataHelepr.getShowChannels(alldata);
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        myChannels.clear();
-                        myChannels.addAll(showChannels);
-                        adapter.notifyDataSetChanged();
-                        if(needShowPosition!=-1){
-                            needShowPosition=-1;
-                        }
-                    }
-                });
-
-            }
-        }).start();
-    }
-
-    private String getFromRaw() {
-        String result = "";
-        try {
-            InputStream input = getResources().openRawResource(R.raw.news_list);
-            ByteArrayOutputStream output = new ByteArrayOutputStream();
-            byte[] buffer = new byte[1024];
-            int length = 0;
-            while ((length = input.read(buffer)) != -1) {
-                output.write(buffer, 0, length);
-            }
-            output.close();
-            input.close();
-
-            return output.toString();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return result;
-    }*/
-    /*public void setSupportActionBar(Toolbar supportActionBar) {
-        this.supportActionBar = supportActionBar;
-    }*/
 
     private class ImageAdapter extends BaseAdapter {
 
@@ -292,6 +247,7 @@ public class MainActivity extends BaseActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+
         getMenuInflater().inflate(R.menu.main, menu);
         final SearchView searchView = (SearchView)menu.findItem(R.id.ab_search).getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -338,31 +294,50 @@ public class MainActivity extends BaseActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-            String isPic = mCache.getAsString("IsHavingPictures");
-            if (isPic != null)
-                mCache.remove("IsHavingPictures");
-            isPic = "true";
-            //Log.e("Setispic", isPic);
-            mCache.put("IsHavingPictures",isPic);
-        } else if (id == R.id.nav_gallery) {
-            String isPic = mCache.getAsString("IsHavingPictures");
-            if (isPic != null)
-                mCache.remove("IsHavingPictures");
-            isPic = "false";
-            //Log.e("Setispic", isPic);
-            mCache.put("IsHavingPictures",isPic);
+        if (id == R.id.nav_gallery) {
+            Menu mn = navigationView.getMenu();
+            MenuItem menuItem = mn.findItem(R.id.nav_gallery);
+            if (menuItem.getTitle().equals("切换到无图模式")){
+                String isPic = mCache.getAsString("IsHavingPictures");
+                if (isPic != null)
+                    mCache.remove("IsHavingPictures");
+                isPic = "false";
+                //Log.e("Setispic", isPic);
+                mCache.put("IsHavingPictures",isPic);
+
+                menuItem.setTitle("切换到有图模式");
+            }else{
+                String isPic = mCache.getAsString("IsHavingPictures");
+                if (isPic != null)
+                    mCache.remove("IsHavingPictures");
+                isPic = "true";
+                menuItem.setTitle("切换到无图模式");
+            }
         } else if (id == R.id.nav_slideshow) {
+            if (i % 2 == 0){
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            i++;}
+            else{
+                i++;
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            }
             recreate();
-        } else if (id == R.id.nav_manage) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-            recreate();
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        }  else if (id == R.id.nav_share) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            LayoutInflater inflater = getLayoutInflater();
+            final View layout = inflater.inflate(R.layout.dialog, null);//获取自定义布局
+            builder.setView(layout);
+            //builder.setIcon(R.drawable.ic_launcher);
+            //builder.setMessage("浏览wuyudong的博客?");
+            TextView textView = (TextView)layout.findViewById(R.id.nav_gallery);
+            builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
