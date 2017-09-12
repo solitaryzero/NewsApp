@@ -1,6 +1,8 @@
 package com.java.group37.newsapp;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -52,6 +54,8 @@ import static android.os.Environment.getExternalStorageDirectory;
 
 import com.iflytek.cloud.*;
 
+import cn.sharesdk.onekeyshare.OnekeyShare;
+
 public class ShowDetails extends AppCompatActivity {
 
     private SpeechSynthesizer mTts;
@@ -70,6 +74,42 @@ public class ShowDetails extends AppCompatActivity {
 
         return(size * metrics.densityDpi) / DisplayMetrics.DENSITY_DEFAULT;
 
+    }
+
+    private void showShare() {
+        OnekeyShare oks = new OnekeyShare();
+        //关闭sso授权
+        oks.disableSSOWhenAuthorize();
+
+// 分享时Notification的图标和文字  2.5.9以后的版本不调用此方法
+        //oks.setNotification(R.drawable.ic_launcher, getString(R.string.app_name));
+        // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间使用
+        oks.setTitle(getIntent().getStringExtra("Headline"));
+        // titleUrl是标题的网络链接，仅在人人网和QQ空间使用
+        oks.setTitleUrl("http://sharesdk.cn");
+        // text是分享文本，所有平台都需要这个字段
+        String details = getIntent().getStringExtra("Details");
+        if (details.length()>50){
+            details = details.substring(0,49)+"...";
+        }
+        oks.setText(details);
+        if (picNum>0){
+            final String[] pictureURLs = getIntent().getStringArrayExtra("PictureList");
+            oks.setImageUrl(pictureURLs[0]);
+        }
+        // url仅在微信（包括好友和朋友圈）中使用
+        jsonAnalyserOne oneAnalyser = new jsonAnalyserOne(getIntent().getStringExtra("rawJSONstring"));
+        News singleNews = oneAnalyser.news;
+        oks.setUrl(singleNews.news_URL);
+        // comment是我对这条分享的评论，仅在人人网和QQ空间使用
+        oks.setComment("你的评论");
+        // site是分享此内容的网站名称，仅在QQ空间使用
+        oks.setSite(getString(R.string.app_name));
+        // siteUrl是分享此内容的网站地址，仅在QQ空间使用
+        oks.setSiteUrl(singleNews.news_URL);
+
+        // 启动分享GUI
+        oks.show(this);
     }
 
     @Override
@@ -312,6 +352,7 @@ public class ShowDetails extends AppCompatActivity {
                         fileOutputStream.close();
                     }
                     item.setIcon(R.drawable.ic_full_star);
+                    Toast.makeText(this,"收藏成功",Toast.LENGTH_SHORT).show();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -335,6 +376,8 @@ public class ShowDetails extends AppCompatActivity {
                 item.setIcon(R.drawable.ic_pause);
                 isSpeaking = 1;
             }
+        } else if (id == R.id.action_share){
+            showShare();
         }
         return true;
     }
