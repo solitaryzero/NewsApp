@@ -60,6 +60,7 @@ public class ShowDetails extends AppCompatActivity {
     private int picNum = 0;
     private boolean isUsingLocalPics;
     private List<Bitmap> bitmaps = new ArrayList<Bitmap>();
+    private int isSpeaking = 0;
 
     private int getPixelsFromDp(int size){
 
@@ -86,7 +87,7 @@ public class ShowDetails extends AppCompatActivity {
         mTts.setParameter(SpeechConstant.VOLUME, "80");
         mTts.setParameter(SpeechConstant.ENGINE_TYPE, SpeechConstant.TYPE_CLOUD);
 
-        listener =new SynthesizerListener() {
+        listener = new SynthesizerListener() {
 
             @Override
             public void onSpeakResumed() {
@@ -115,7 +116,7 @@ public class ShowDetails extends AppCompatActivity {
 
             @Override
             public void onCompleted(SpeechError arg0) {
-
+                isSpeaking = 0;
             }
 
             @Override
@@ -259,6 +260,9 @@ public class ShowDetails extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mTts.stopSpeaking();
+        isSpeaking = 0;
+        mTts.destroy();
     }
 
     @Override
@@ -315,15 +319,21 @@ public class ShowDetails extends AppCompatActivity {
 
             return super.onOptionsItemSelected(item);
         } else if (id == R.id.action_read){
-            if (!mTts.isSpeaking())
+            if (isSpeaking == 0)
             {
                 TextView detail = (TextView) findViewById(R.id.NewsDetail);
                 mTts.startSpeaking(detail.getText().toString(),listener);
-                item.setIcon(R.drawable.ic_stop);
+                item.setIcon(R.drawable.ic_pause);
+                isSpeaking = 1;
             }
-            else {
-                mTts.stopSpeaking();
+            else if (isSpeaking == 1) {
+                mTts.pauseSpeaking();
                 item.setIcon(R.drawable.ic_play_arrow);
+                isSpeaking = 2;
+            } else if (isSpeaking == 2){
+                mTts.resumeSpeaking();
+                item.setIcon(R.drawable.ic_pause);
+                isSpeaking = 1;
             }
         }
         return true;
