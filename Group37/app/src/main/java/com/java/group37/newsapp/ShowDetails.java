@@ -230,15 +230,7 @@ public class ShowDetails extends AppCompatActivity {
         listView.setLayoutParams(params);
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        mCache = ACache.get(MainActivity.mactivity);
-        rawJSONString = getIntent().getStringExtra("rawJSONstring");
-        isUsingLocalPics = getIntent().getBooleanExtra("isUsingLocalPictures",false);
-
-        //设置TTS
+    private void setupTTS(){
         SpeechUtility.createUtility(this, SpeechConstant.APPID +"=59b6a41a");
         mTts= SpeechSynthesizer.createSynthesizer(this, null);
         mTts.setParameter(SpeechConstant.VOICE_NAME, "xiaoyan");
@@ -283,8 +275,9 @@ public class ShowDetails extends AppCompatActivity {
 
             }
         };
+    }
 
-        //设置标题栏
+    private void setupToolbar(){
         setContentView(R.layout.activity_show_details);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Details");
@@ -296,8 +289,9 @@ public class ShowDetails extends AppCompatActivity {
                 finish();
             }
         });
+    }
 
-        //设置图片栏
+    private void setupPictures(){
         final ImageView headerPicture = (ImageView) findViewById(R.id.HeaderPicture);
         HorizontalScrollView pictureScroll = (HorizontalScrollView) findViewById(R.id.PictureScroll);
         LinearLayout ll = (LinearLayout) findViewById(R.id.Pictures);
@@ -321,16 +315,10 @@ public class ShowDetails extends AppCompatActivity {
                 iv.setTag(R.id.position_tag,i);
                 if (isUsingLocalPics){
                     File f = new File(url);
-                    Glide.with(this)
-                            .load(f)
-                            .crossFade()
-                            .into(iv);
+                    Glide.with(this).load(f).crossFade().into(iv);
                 }
                 else {
-                    Glide.with(this)
-                            .load(url)
-                            .crossFade()
-                            .into(iv);
+                    Glide.with(this).load(url).crossFade().into(iv);
                 }
 
                 iv.setOnClickListener(new View.OnClickListener() {
@@ -349,8 +337,9 @@ public class ShowDetails extends AppCompatActivity {
             headerPicture.setVisibility(View.GONE);
             pictureScroll.setVisibility(View.GONE);
         }
+    }
 
-        //设置标题与正文
+    private void setupText(){
         Intent intent = getIntent();
         String headlineStr = intent.getStringExtra("Headline");
         String detailsStr = intent.getStringExtra("Details");
@@ -358,8 +347,9 @@ public class ShowDetails extends AppCompatActivity {
         TextView details = (TextView) findViewById(R.id.NewsDetail);
         headline.setText(headlineStr);
         details.setText(detailsStr);
+    }
 
-        //设置推荐栏
+    private void setupRecommend(){
         jsonAnalyserOne oa;
         String rcjson0 = getIntent().getStringExtra("RecommendRawJsonString0");
         if (rcjson0 != null){
@@ -419,6 +409,30 @@ public class ShowDetails extends AppCompatActivity {
             }
         });
         fixListViewHeight(list);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        mCache = ACache.get(MainActivity.mactivity);
+        rawJSONString = getIntent().getStringExtra("rawJSONstring");
+        isUsingLocalPics = getIntent().getBooleanExtra("isUsingLocalPictures",false);
+
+        //设置TTS
+        setupTTS();
+
+        //设置标题栏
+        setupToolbar();
+
+        //设置图片栏
+        setupPictures();
+
+        //设置标题与正文
+        setupText();
+
+        //设置推荐栏
+        setupRecommend();
     }
 
     @Override
