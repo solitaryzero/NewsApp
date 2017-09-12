@@ -57,7 +57,7 @@ public class RecentActivity extends AppCompatActivity
             recentNewsList = new String[0];
         else
             recentNewsList = nowFileString.split(" ");
-        Log.i("nowFile", nowFileString);
+        //Log.i("nowFile", nowFileString);
         for (int i = 0; i < recentNewsList.length; i++)
         {
             String jsonOneString = mCache.getAsString(recentNewsList[recentNewsList.length - i - 1]);

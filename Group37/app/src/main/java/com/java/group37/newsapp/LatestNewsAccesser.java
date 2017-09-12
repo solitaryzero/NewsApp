@@ -13,8 +13,8 @@ public class LatestNewsAccesser{
     public static final String CHARSET_UTF_8 = "utf-8";
     public static final String CONTENT_TYPE_TEXT_HTML = "text/xml";
     public static final String CONTENT_TYPE_FORM_URL = "application/x-www-form-urlencoded";
-    public static final int SEND_REQUEST_TIME_OUT = 50000;
-    public static final int READ_TIME_OUT = 50000;
+    public static final int SEND_REQUEST_TIME_OUT = 2000;
+    public static final int READ_TIME_OUT = 2000;
     public StringBuilder stringBuilder;
     LatestNewsAccesser (int newsNum, int category){
         stringBuilder = new StringBuilder();

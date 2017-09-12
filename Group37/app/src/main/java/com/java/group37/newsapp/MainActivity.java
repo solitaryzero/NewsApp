@@ -91,6 +91,7 @@ public class MainActivity extends BaseActivity
         //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         mactivity=this;
         mCache = ACache.get(MainActivity.mactivity);
+        mCache.put("IsHavingPictures","true");
         mainContext = this.getBaseContext();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -369,8 +370,19 @@ public class MainActivity extends BaseActivity
 
         if (id == R.id.nav_camera) {
             // Handle the camera action
+            String isPic = mCache.getAsString("IsHavingPictures");
+            if (isPic != null)
+                mCache.remove("IsHavingPictures");
+            isPic = "true";
+            //Log.e("Setispic", isPic);
+            mCache.put("IsHavingPictures",isPic);
         } else if (id == R.id.nav_gallery) {
-
+            String isPic = mCache.getAsString("IsHavingPictures");
+            if (isPic != null)
+                mCache.remove("IsHavingPictures");
+            isPic = "false";
+            //Log.e("Setispic", isPic);
+            mCache.put("IsHavingPictures",isPic);
         } else if (id == R.id.nav_slideshow) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
             recreate();

@@ -283,6 +283,14 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
                     tmpList = new String[1];
                     tmpList[0] = "";
                 }
+                String isPic = mCache.getAsString("IsHavingPictures");
+                if (isPic == null)
+                    isPic = "true";
+                if (isPic.equals("false")){
+                    tmpList = new String[1];
+                    tmpList[0] = "";
+                }
+                //Log.e("ispic", isPic);
 
                 intent.putExtra("PictureList", tmpList);
                 intent.putExtra("rawJSONstring",singleNews.original_String);
@@ -306,6 +314,16 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
                 tmpList = new String[1];
                 tmpList[0] = "";
             }
+
+            String isPic = mCache.getAsString("IsHavingPictures");
+            if (isPic == null)
+                isPic = "true";
+            if (isPic.equals("false")){
+                tmpList = new String[1];
+                tmpList[0] = "";
+            }
+            //Log.e("ispic", isPic);
+
             intent.putExtra("PictureList", tmpList);
             intent.putExtra("rawJSONstring",singleNews.original_String);
             //Log.e("original", singleNews.original_String);
