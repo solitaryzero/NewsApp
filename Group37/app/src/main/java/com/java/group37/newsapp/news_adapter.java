@@ -20,10 +20,12 @@ import java.util.List;
 public class news_adapter extends BaseAdapter {
     private LayoutInflater mInflater;
     private List<News> mDatas;
+    private Context cxt;
 
     public news_adapter(Context context, List<News> datas){
         this.mDatas = datas;
         mInflater = LayoutInflater.from(context);
+        cxt = context;
         //****************************************
     }
 
@@ -79,18 +81,18 @@ public class news_adapter extends BaseAdapter {
             String tmpPicture = tmpPictures[0];
             File file = new File(tmpPicture);
             //加载图片
-            Glide.with(SeeFavorited.sfactivity).load(file).placeholder(R.drawable.loading).error(R.drawable.not_found).dontAnimate().into(holder.mImg);
+            Glide.with(cxt).load(file).placeholder(R.drawable.loading).error(R.drawable.not_found).dontAnimate().into(holder.mImg);
         }
         else if(!newsItem.news_Pictures.equals("")&&tmpPictures.length != 0){
             holder.mImg.setVisibility(View.VISIBLE);
             String tmpPicture = tmpPictures[0];
-            Glide.with(MainActivity.mactivity).load(tmpPicture).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.drawable.loading).error(R.drawable.not_found).dontAnimate().into(holder.mImg);
+            Glide.with(cxt).load(tmpPicture).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.drawable.loading).error(R.drawable.not_found).dontAnimate().into(holder.mImg);
             //Glide.with(MainActivity.mactivity).load(tmpPictures).diskCacheStrategy(DiskCacheStrategy.ALL).dontAnimate().into(holder.mImg);
             //**********************
         }
         else{
             holder.mImg.setVisibility(View.VISIBLE);
-            Glide.with(MainActivity.mactivity).load(R.drawable.not_found).dontAnimate().into(holder.mImg);
+            Glide.with(cxt).load(R.drawable.not_found).dontAnimate().into(holder.mImg);
         }
         return view;
     }
