@@ -69,7 +69,8 @@
                 android:layout_weight="1"
                 android:src="@drawable/icon_subscibe_show"
                 android:layout_width="40dp"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:background="@color/color_white1"/>
         </LinearLayout>
 
 
