@@ -57,7 +57,7 @@ public class MainFragment extends Fragment implements OnRefreshListener,OnItemCl
     private ACache mCache;
 
     public MainFragment()   {}
-    public MainFragment(int newsType)
+    public void setNewsType(int newsType)
     {
         this.newsType = newsType;
     }

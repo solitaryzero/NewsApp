@@ -96,7 +96,7 @@
         Id="4"
         SortId="4"
         AppId="wx9fd0d7be5d9c2f47"
-        AppSecret="7a1286b28a187768fbd5ce17c14d7675"
+        AppSecret="4b727f72e10078269a8c56ae2e1467e4"
 		userName="gh_afb25ac019c9"
 		path="pages/index/index.html?id=1"
         BypassApproval="false"
@@ -106,7 +106,7 @@
         Id="5"
         SortId="5"
         AppId="wx9fd0d7be5d9c2f47"
-        AppSecret="7a1286b28a187768fbd5ce17c14d7675"
+        AppSecret="4b727f72e10078269a8c56ae2e1467e4"
         BypassApproval="false"
         Enable="true" />
         
@@ -114,7 +114,7 @@
         Id="6"
         SortId="6"
         AppId="wx9fd0d7be5d9c2f47"
-        AppSecret="7a1286b28a187768fbd5ce17c14d7675"
+        AppSecret="4b727f72e10078269a8c56ae2e1467e4"
         Enable="false" />
     
 	<!-- ShareByAppClient标识是否使用微博客户端分享，默认是false -->

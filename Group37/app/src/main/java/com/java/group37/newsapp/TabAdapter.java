@@ -57,7 +57,8 @@ public class TabAdapter extends FragmentStatePagerAdapter
         for (i = 0; i < 13; i++)
             if (nowTitle.equals(titles[i]))
                 break;
-        MainFragment fragment = new MainFragment(i);
+        MainFragment fragment = new MainFragment();
+        fragment.setNewsType(i);
         return fragment;
     }
     public CharSequence getPageTitle(int position) {
