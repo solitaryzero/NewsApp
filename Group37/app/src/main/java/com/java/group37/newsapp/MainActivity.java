@@ -60,7 +60,7 @@ public class MainActivity extends BaseActivity
     private BGARefreshLayout mBGARefreshLayout;
     public static MainActivity mactivity;
     public static Context mainContext;
-    public static int i = 0;
+    public static int isNightMode = 0;
     private ACache mCache;
     private RecyclerView mRecyclerView;
     private Context mContext;
@@ -87,7 +87,7 @@ public class MainActivity extends BaseActivity
     private TabAdapter mAdapter ;
     private BottomNavigationView butttom;
     NavigationView navigationView;
-    String menutitle1;
+    String menutitle1 = "切换到夜间模式";
     String menutitle2 = "切换到无图模式";
     View switch_view;
     //TitleFragmentAdapter adapter;
@@ -97,14 +97,38 @@ public class MainActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        if (i % 2 == 0){
-            menutitle1 = "切换到夜间模式";
-        }
-        else{
-            menutitle1 = "切换到日间模式";
-        }
+
         mactivity=this;
         mCache = ACache.get(MainActivity.mactivity);
+
+        String isNight = mCache.getAsString("IsNightMode");
+        if (isNight == null){
+            menutitle1 = "切换到夜间模式";
+            mCache.put("IsNightMode", "Day");
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
+        else if (isNight.equals("Night")){
+            menutitle1 = "切换到日间模式";
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        }
+        else{
+            menutitle1 = "切换到夜间模式";
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
+
+        String isHavingPictures = mCache.getAsString("IsHavingPictures");
+        if (isHavingPictures == null){
+            menutitle2 = "切换到无图模式";
+            mCache.put("IsHavingPictures", "true");
+        }
+        else if (isHavingPictures.equals("false")){
+            menutitle2 = "切换到有图模式";
+        }
+        else{
+            menutitle2 = "切换到无图模式";
+        }
+
+
         //mCache.put("IsHavingPictures","true");
         mainContext = this.getBaseContext();
         super.onCreate(savedInstanceState);
@@ -115,6 +139,8 @@ public class MainActivity extends BaseActivity
         mViewPager.setAdapter(mAdapter);//导航栏适配器
 
         //mAdapter.removeFragment("财经");
+
+
 
 
         mIndicator.setViewPager(mViewPager);
@@ -297,30 +323,40 @@ public class MainActivity extends BaseActivity
         if (id == R.id.nav_gallery) {
             Menu mn = navigationView.getMenu();
             MenuItem menuItem = mn.findItem(R.id.nav_gallery);
-            if (menuItem.getTitle().equals("切换到无图模式")){
-                String isPic = mCache.getAsString("IsHavingPictures");
-                if (isPic != null)
-                    mCache.remove("IsHavingPictures");
+            String isPic = mCache.getAsString("IsHavingPictures");
+            if (isPic != null)
+                mCache.remove("IsHavingPictures");
+            else
+                isPic = "true";
+            if (isPic.equals("true"))
+            {
                 isPic = "false";
-                //Log.e("Setispic", isPic);
-                mCache.put("IsHavingPictures",isPic);
-
                 menuItem.setTitle("切换到有图模式");
-            }else{
-                String isPic = mCache.getAsString("IsHavingPictures");
-                if (isPic != null)
-                    mCache.remove("IsHavingPictures");
+            }
+            else{
                 isPic = "true";
                 menuItem.setTitle("切换到无图模式");
             }
+            mCache.put("IsHavingPictures",isPic);
+
         } else if (id == R.id.nav_slideshow) {
-            if (i % 2 == 0){
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-            i++;}
-            else{
-                i++;
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            String isNight = mCache.getAsString("IsNightMode");
+            Menu mn = navigationView.getMenu();
+            MenuItem menuItem = mn.findItem(R.id.nav_slideshow);
+            if (isNight == null){
+                isNight = "Day";
             }
+            if (isNight.equals("Night")){
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                menuItem.setTitle("切换到夜间模式");
+                isNight = "Day";
+            }
+            else{
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                menuItem.setTitle("切换到日间模式");
+                isNight = "Night";
+            }
+            mCache.put("IsNightMode", isNight);
             recreate();
         }  else if (id == R.id.nav_share) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
